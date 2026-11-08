@@ -20,9 +20,10 @@ export function Alt() {
         </div>
         <div>
           <p className="etiket mb-4 text-zemin/50">İletişim</p>
-          <p className="text-zemin/80">{SITE.telefon}</p>
-          <p className="text-zemin/80">{SITE.eposta}</p>
-          <a href={SITE.instagram} className="text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Instagram</a>
+          <a href={SITE.telefonBaglantisi} className="block text-zemin/80 hover:text-zemin">{SITE.telefon}</a>
+          {SITE.eposta && <a href={`mailto:${SITE.eposta}`} className="block text-zemin/80 hover:text-zemin">{SITE.eposta}</a>}
+          {SITE.instagram && <a href={SITE.instagram} className="text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Instagram</a>}
+          <a href={SITE.haritaAdresi} className="block text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Google Haritalar</a>
         </div>
         <div className="flex flex-col gap-1.5">
           <p className="etiket mb-3 text-zemin/50">Alışveriş</p>

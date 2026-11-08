@@ -41,6 +41,7 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
       <button onClick={() => setGoster(!goster)} className="flex w-full flex-wrap items-center justify-between gap-3 text-left">
         <span>
           <span className="font-medium">#{s.id}</span> <span className="ml-2">{s.musteri_ad}</span>
+          {s.misafir && <span className="etiket ml-2 border border-cizgi px-1.5 py-0.5 text-soluk">Üye değil</span>}
           <span className="ml-3 text-sm text-soluk">{tarih(s.olusturulma_tarihi)} · {TESLIMAT_ADLARI[s.teslimat_yontemi]}</span>
         </span>
         <span className="flex items-center gap-4 text-sm">
@@ -63,6 +64,10 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
             <p className="mt-3 text-soluk">Teslimat ücreti: {fiyat(s.teslimat_ucreti)}</p>
           </div>
           <div className="space-y-2">
+            <p>
+              <span className="text-soluk">Müşteri:</span> {s.musteri_ad} · <a href={`mailto:${s.musteri_eposta}`} className="underline">{s.musteri_eposta}</a>
+              {s.musteri_telefon && <> · <a href={`tel:${s.musteri_telefon.replace(/[^0-9+]/g, "")}`} className="underline">{s.musteri_telefon}</a></>}
+            </p>
             <p><span className="text-soluk">Ödeme:</span> {s.odeme_yontemi === "havale" ? "Havale / EFT" : "Kart (PayTR)"}</p>
             <p><span className="text-soluk">Adres:</span> {s.teslimat_adresi || "Kafeden teslim"}</p>
             {s.siparis_notu && <p><span className="text-soluk">Not:</span> {s.siparis_notu}</p>}

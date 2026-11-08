@@ -46,6 +46,8 @@ Site: http://localhost:3000 · API belgeleri: http://localhost:8000/docs. Yönet
 
 **Teslimat:** Üç yöntem var: Türkiye geneli kargo, Ayvalık içi adrese teslim, kafeden teslim. Ücretler `.env`'deki `KARGO_UCRETI`, `AYVALIK_TESLIMAT_UCRETI`, `UCRETSIZ_TESLIMAT_SINIRI` ile ayarlanır; `KARGO_UCRETI` boşsa kargo kapalıdır. Ücret sipariş anında hesaplanıp siparişe yazılır.
 
+**Üye olmadan sipariş:** Ödeme sayfasında giriş yapmamış müşteriden ad, e-posta ve telefon alınır (`POST /misafir/siparisler`). Müşteriye siparişe özel bir kod verilir; sipariş sayfası `/siparis/{id}#kod` adresindedir ve e-postalardaki bağlantı da budur. Kod saklanmaz, SECRET_KEY ve siparişteki rastgele tuzdan üretilir (`backend/misafir.py`). Üye olan müşteri tüm siparişlerini Hesabım'da görür.
+
 **Ödeme:** `PAYTR_*` doluysa kartla ödeme açılır: müşteri PayTR'ın güvenli sayfasına gider, sonra `SITE_ADRESI/odeme/sonuc` sayfasına döner. Sipariş yalnızca PayTR'ın imzalı bildirimiyle ödenmiş olur (`POST /odeme/paytr/bildirim`). `ODEME_BILGISI` doluysa havale/EFT de sunulur; havale gelince yönetici siparişi elle "Ödendi" yapar. Kart denenip 45 dakika ödenmeyen siparişler iptal olur, stok geri döner.
 
 **Güvenlik:** Giriş denemesi sınırı, e-postayla şifre sıfırlama, KVKK aydınlatma ve izin kayıtları Butik App'ten taşındı, aynı testlerle korunuyor.

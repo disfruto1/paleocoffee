@@ -48,8 +48,11 @@ export type SiparisKalemi = {
 
 export type Siparis = {
   id: number;
-  kullanici_id: number;
+  kullanici_id: number | null;
   musteri_ad: string | null;
+  musteri_eposta: string | null;
+  musteri_telefon: string | null;
+  misafir: boolean;
   durum: string;
   toplam_tutar: string;
   teslimat_yontemi: TeslimatYontemi;

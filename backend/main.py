@@ -8,7 +8,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from fastapi import BackgroundTasks, FastAPI, Depends, File, HTTPException, Query, Request, UploadFile, status
+from fastapi import BackgroundTasks, FastAPI, Depends, File, Header, HTTPException, Query, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -29,12 +29,13 @@ from schemas import (
     KullaniciOlustur, KullaniciCevap, Token,
     KategoriOlustur, KategoriCevap,
     UrunOlustur, UrunCevap, AktifGuncelle,
-    SiparisOlustur, SiparisCevap, SiparisDurumGuncelle,
+    SiparisOlustur, SiparisCevap, SiparisDurumGuncelle, MisafirSiparisOlustur, MisafirSiparisCevap,
 )
 from auth import sifreyi_hashle, giris_sifresini_dogrula, token_olustur, tokeni_coz
 import eposta
 import bildirimler
 import giris_siniri
+import misafir
 import gorseller
 import paytr
 import sifre_sifirlama
@@ -85,6 +86,8 @@ app.add_middleware(
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="giris")
+# Uye girisi istege bagli olan uclar icin (odeme sonucu uye veya misafir tarafindan sorulabilir)
+oauth2_istege_bagli = OAuth2PasswordBearer(tokenUrl="giris", auto_error=False)
 
 # Yuklenen urun gorselleri. Site bu yolu kendi adresinden API'ye yonlendirir (web/next.config.ts)
 app.mount("/yuklenen", StaticFiles(directory=gorseller.klasor()), name="yuklenen")
@@ -106,6 +109,17 @@ def aktif_kullanici_getir(token: str = Depends(oauth2_scheme), db: Session = Dep
     if not kullanici or not kullanici.aktif or kullanici.token_surumu != token_surumu:
         # Silinmis/pasif kullanicinin veya sifre degismeden onceki token: oturum gecersiz sayilir (uygulama otomatik cikis yapar)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Kullanici bulunamadi", headers={"WWW-Authenticate": "Bearer"})
+    return kullanici
+
+
+def varsa_kullanici(token: Optional[str] = Depends(oauth2_istege_bagli), db: Session = Depends(get_db)) -> Optional[Kullanici]:
+    """Gecerli oturum varsa kullaniciyi, yoksa None dondurur (hata vermez)."""
+    if not token:
+        return None
+    e_posta, token_surumu = tokeni_coz(token)
+    kullanici = db.query(Kullanici).filter(Kullanici.e_posta == e_posta).first() if e_posta else None
+    if not kullanici or not kullanici.aktif or kullanici.token_surumu != token_surumu:
+        return None
     return kullanici
 
 
@@ -554,10 +568,8 @@ def _stok_iade_et(db: Session, siparis: Siparis):
             urun.stok += kalem.adet
 
 
-@app.post("/siparisler", response_model=SiparisCevap, tags=["Siparisler"])
-def siparis_olustur(
-    veri: SiparisOlustur, arka_plan: BackgroundTasks, db: Session = Depends(get_db), kullanici: Kullanici = Depends(aktif_kullanici_getir)
-):
+def _siparis_kaydet(veri: SiparisOlustur, arka_plan: BackgroundTasks, db: Session, sahip: dict) -> Siparis:
+    """Uye ve misafir siparisinin ortak kismi. sahip: kullanici_id ya da misafir_* alanlari."""
     odeme_bilgisi = os.getenv("ODEME_BILGISI", "").strip()
     if veri.odeme_yontemi == "havale" and not odeme_bilgisi:
         raise HTTPException(status_code=400, detail="Havale ile odeme su an kullanilamiyor")
@@ -608,7 +620,7 @@ def siparis_olustur(
     if ucret is None:
         raise HTTPException(status_code=400, detail="Bu teslimat yontemi su an kullanilamiyor")
     siparis = Siparis(
-        kullanici_id=kullanici.id, toplam_tutar=urun_tutari + ucret, teslimat_yontemi=veri.teslimat_yontemi,
+        **sahip, toplam_tutar=urun_tutari + ucret, teslimat_yontemi=veri.teslimat_yontemi,
         teslimat_ucreti=ucret, teslimat_adresi=adres, siparis_notu=_bos_ise_none(veri.siparis_notu),
         odeme_yontemi=veri.odeme_yontemi, kalemler=kalemler,
     )
@@ -618,6 +630,60 @@ def siparis_olustur(
     if veri.odeme_yontemi == "havale":
         arka_plan.add_task(bildirimler.gonder, bildirimler.havale_siparisi_alindi(siparis, odeme_bilgisi))
     return siparis
+
+
+@app.post("/siparisler", response_model=SiparisCevap, tags=["Siparisler"])
+def siparis_olustur(
+    veri: SiparisOlustur, arka_plan: BackgroundTasks, db: Session = Depends(get_db), kullanici: Kullanici = Depends(aktif_kullanici_getir)
+):
+    return _siparis_kaydet(veri, arka_plan, db, {"kullanici_id": kullanici.id})
+
+
+@app.post("/misafir/siparisler", response_model=MisafirSiparisCevap, tags=["Misafir"])
+def misafir_siparis_olustur(veri: MisafirSiparisOlustur, request: Request, arka_plan: BackgroundTasks, db: Session = Depends(get_db)):
+    """Uye olmadan siparis. Donen erisim_kodu ile siparis gorulur, odenir, iptal edilir (X-Siparis-Kodu basligi)."""
+    if not veri.aydinlatma_okundu:
+        raise HTTPException(status_code=400, detail="Siparis icin KVKK Aydinlatma Metni okunmalidir")
+    kalan = giris_siniri.misafir_siparis_say(db, request.client.host if request.client else "bilinmiyor")
+    if kalan:
+        raise _cok_fazla_istek(kalan)
+    tuz = misafir.tuz_uret()
+    siparis = _siparis_kaydet(veri, arka_plan, db, {
+        "misafir_ad": veri.ad.strip(), "misafir_eposta": veri.e_posta.strip().lower(),
+        "misafir_telefon": veri.telefon.strip(), "erisim_tuzu": tuz,
+    })
+    return MisafirSiparisCevap(**SiparisCevap.model_validate(siparis).model_dump(), erisim_kodu=misafir.kod(siparis.id, tuz))
+
+
+def _misafir_siparisi(db: Session, siparis_id: int, kod: Optional[str], kilitle: bool = False) -> Siparis:
+    sorgu = db.query(Siparis).filter(Siparis.id == siparis_id, Siparis.kullanici_id.is_(None))
+    siparis = (sorgu.with_for_update() if kilitle else sorgu).first()
+    # Kod yanlissa da "yok" denir: siparis numaralarinin varligi sizmasin
+    if not siparis or not misafir.dogru_mu(siparis.id, siparis.erisim_tuzu, kod):
+        raise HTTPException(status_code=404, detail="Siparis bulunamadi")
+    return siparis
+
+
+@app.get("/misafir/siparisler/{siparis_id}", response_model=SiparisCevap, tags=["Misafir"])
+def misafir_siparis_getir(siparis_id: int, kod: Optional[str] = Header(None, alias=misafir.BASLIK), db: Session = Depends(get_db)):
+    return _misafir_siparisi(db, siparis_id, kod)
+
+
+@app.post("/misafir/siparisler/{siparis_id}/iptal", response_model=SiparisCevap, tags=["Misafir"])
+def misafir_siparis_iptal(siparis_id: int, kod: Optional[str] = Header(None, alias=misafir.BASLIK), db: Session = Depends(get_db)):
+    return _musteri_iptali(db, _misafir_siparisi(db, siparis_id, kod, kilitle=True))
+
+
+@app.post("/misafir/siparisler/{siparis_id}/odeme/paytr", response_model=OdemeBaslatCevap, tags=["Misafir"])
+def misafir_odeme_baslat(
+    siparis_id: int, veri: OdemeBaslat, request: Request, kod: Optional[str] = Header(None, alias=misafir.BASLIK), db: Session = Depends(get_db)
+):
+    # Once kod kontrolu: kodu bilmeyen, baskasinin siparisinin odeme deneme sayacini dolduramasin
+    _misafir_siparisi(db, siparis_id, kod)
+    return _odeme_baslat(
+        db, request, siparis_id, veri.telefon, sayac=f"misafir-{siparis_id}",
+        sahibi_mi=lambda s: s.misafir and misafir.dogru_mu(s.id, s.erisim_tuzu, kod),
+    )
 
 
 @app.get("/siparisler", response_model=list[SiparisCevap], tags=["Siparisler"])
@@ -651,6 +717,11 @@ def siparis_iptal_et(siparis_id: int, db: Session = Depends(get_db), kullanici: 
     siparis = db.query(Siparis).filter(Siparis.id == siparis_id).with_for_update().first()
     if not siparis or siparis.kullanici_id != kullanici.id:
         raise HTTPException(status_code=404, detail="Siparis bulunamadi")
+    return _musteri_iptali(db, siparis)
+
+
+def _musteri_iptali(db: Session, siparis: Siparis) -> Siparis:
+    """Siparis kilitli olarak gelir."""
     if siparis.durum != SiparisDurum.ODEME_BEKLIYOR:
         raise HTTPException(status_code=400, detail="Sadece odeme bekleyen siparisler iptal edilebilir")
     siparis.durum = SiparisDurum.IPTAL_EDILDI
@@ -707,17 +778,23 @@ def paytr_odeme_baslat(
     db: Session = Depends(get_db),
     kullanici: Kullanici = Depends(aktif_kullanici_getir),
 ):
+    return _odeme_baslat(
+        db, request, siparis_id, veri.telefon, sayac=str(kullanici.id), sahibi_mi=lambda s: s.kullanici_id == kullanici.id
+    )
+
+
+def _odeme_baslat(db: Session, request: Request, siparis_id: int, telefon: Optional[str], sayac: str, sahibi_mi) -> OdemeBaslatCevap:
     ayar = paytr.ayarlar()
     if ayar is None:
         raise HTTPException(status_code=503, detail="Kart ile odeme su an kullanilamiyor")
-    kalan = giris_siniri.odeme_baslatma_say(db, kullanici.id)
+    kalan = giris_siniri.odeme_baslatma_say(db, sayac)
     if kalan:
         raise _cok_fazla_istek(kalan)
 
     # Durum kontrolu ve deneme kaydi kilit altinda; PayTR istegi kilit birakildiktan sonra.
     # Kilit acik kalsaydi yavas bir PayTR yaniti iptal ve bildirimleri de bekletirdi.
     siparis = db.query(Siparis).filter(Siparis.id == siparis_id).with_for_update().first()
-    if not siparis or siparis.kullanici_id != kullanici.id:
+    if not siparis or not sahibi_mi(siparis):
         raise HTTPException(status_code=404, detail="Siparis bulunamadi")
     if siparis.durum != SiparisDurum.ODEME_BEKLIYOR:
         raise HTTPException(status_code=400, detail="Bu siparis icin odeme beklenmiyor")
@@ -725,10 +802,10 @@ def paytr_odeme_baslat(
     tutar_kurus = paytr.kurusa_cevir(siparis.toplam_tutar)
     if tutar_kurus <= 0:
         raise HTTPException(status_code=400, detail="Bu siparis icin odeme alinamaz")
-    telefon = veri.telefon.strip() if veri.telefon else kullanici.telefon
+    telefon = telefon.strip() if telefon else siparis.musteri_telefon
     if not telefon:
         raise HTTPException(status_code=400, detail="Kart ile odeme icin telefon numarasi gerekli")
-    e_posta = kullanici.e_posta
+    e_posta = siparis.musteri_eposta
     if not e_posta.isascii() or len(e_posta) > 100:
         raise HTTPException(status_code=400, detail="E-posta adresiniz kart odemesi icin uygun degil")
 
@@ -737,8 +814,11 @@ def paytr_odeme_baslat(
     if siparis.teslimat_ucreti > 0:
         satirlar.append((teslimat.ADLAR.get(siparis.teslimat_yontemi, "Teslimat"), siparis.teslimat_ucreti, 1))
     sepet = paytr.sepet_kodla(satirlar)
-    ad, adres = kullanici.ad, siparis.teslimat_adresi or "Kafeden teslim: Ayvalık"
-    kullanici.telefon = telefon
+    ad, adres = siparis.musteri_ad, siparis.teslimat_adresi or "Kafeden teslim: Ayvalık"
+    if siparis.kullanici:
+        siparis.kullanici.telefon = telefon
+    else:
+        siparis.misafir_telefon = telefon
     db.add(PaytrOdeme(merchant_oid=merchant_oid, siparis_id=siparis.id, tutar_kurus=tutar_kurus, test_modu=ayar.test_modu, olusturulma=int(time.time())))
     db.commit()
 
@@ -855,10 +935,20 @@ def paytr_hata_sayfasi():
 
 
 @app.get("/odeme/paytr/{merchant_oid}", response_model=OdemeDurumCevap, tags=["Odeme"])
-def paytr_odeme_durumu(merchant_oid: str, db: Session = Depends(get_db), kullanici: Kullanici = Depends(aktif_kullanici_getir)):
+def paytr_odeme_durumu(
+    merchant_oid: str,
+    db: Session = Depends(get_db),
+    kullanici: Optional[Kullanici] = Depends(varsa_kullanici),
+    kod: Optional[str] = Header(None, alias=misafir.BASLIK),
+):
+    """Uye oturumuyla veya misafir siparisinin koduyla sorulur."""
     odeme = db.query(PaytrOdeme).filter(PaytrOdeme.merchant_oid == merchant_oid).first()
     siparis = db.query(Siparis).filter(Siparis.id == odeme.siparis_id).first() if odeme else None
-    if not siparis or (kullanici.rol != KullaniciRol.YONETICI and siparis.kullanici_id != kullanici.id):
+    yetkili = siparis is not None and (
+        (kullanici is not None and (kullanici.rol == KullaniciRol.YONETICI or siparis.kullanici_id == kullanici.id))
+        or (siparis.misafir and misafir.dogru_mu(siparis.id, siparis.erisim_tuzu, kod))
+    )
+    if not yetkili:
         raise HTTPException(status_code=404, detail="Odeme bulunamadi")
     return OdemeDurumCevap(
         merchant_oid=odeme.merchant_oid,

@@ -143,6 +143,9 @@ class SiparisKalemiOlustur(BaseModel):
     adet: int = Field(gt=0, le=1000)
 
 
+TELEFON_DESENI = r"^\+?[0-9][0-9 ()-]{9,19}$"
+
+
 class SiparisOlustur(BaseModel):
     teslimat_yontemi: Literal["kargo", "ayvalik", "magazadan"] = "kargo"
     # Kargo ve Ayvalik ici teslimatta zorunlu, magazadan teslimde gonderilmez
@@ -150,6 +153,13 @@ class SiparisOlustur(BaseModel):
     siparis_notu: Optional[str] = Field(default=None, max_length=500)
     odeme_yontemi: Literal["kart", "havale"] = "kart"
     kalemler: list[SiparisKalemiOlustur] = Field(min_length=1, max_length=50)
+
+
+class MisafirSiparisOlustur(SiparisOlustur):
+    ad: str = Field(min_length=1, max_length=120)
+    e_posta: EmailStr
+    telefon: str = Field(pattern=TELEFON_DESENI)  # kart odemesi ve teslimat icin
+    aydinlatma_okundu: bool = False
 
 
 class SiparisKalemiCevap(BaseModel):
@@ -167,8 +177,11 @@ class SiparisKalemiCevap(BaseModel):
 
 class SiparisCevap(BaseModel):
     id: int
-    kullanici_id: int
+    kullanici_id: Optional[int] = None
     musteri_ad: Optional[str] = None
+    musteri_eposta: Optional[str] = None
+    musteri_telefon: Optional[str] = None
+    misafir: bool = False
     durum: str
     toplam_tutar: Decimal
     teslimat_yontemi: str
@@ -182,6 +195,10 @@ class SiparisCevap(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class MisafirSiparisCevap(SiparisCevap):
+    erisim_kodu: str  # siparisi gormek, odemek ve iptal etmek icin; yalnizca bir kez dondurulur
 
 
 class SiparisDurumGuncelle(BaseModel):

@@ -7,6 +7,7 @@ import os
 from dataclasses import dataclass
 
 import eposta
+import misafir
 from models import Siparis, TeslimatYontemi
 
 TESLIMAT = {
@@ -54,16 +55,24 @@ def _ozet(s: Siparis) -> str:
     return "\n".join(satirlar)
 
 
+def siparis_adresi(s: Siparis) -> str:
+    """Musterinin siparisini izledigi sayfa. Misafirde gizli kod adresin # kismindadir: sunucuya gonderilmez."""
+    if s.misafir:
+        return f"{_site()}/siparis/{s.id}#{misafir.kod(s.id, s.erisim_tuzu)}"
+    return f"{_site()}/hesabim/siparis/{s.id}"
+
+
 def _siparis_baglantisi(s: Siparis) -> str:
-    return f"\n\nSiparişinizi buradan izleyebilirsiniz: {_site()}/hesabim/siparis/{s.id}" if _site() else ""
+    return f"\n\nSiparişinizi buradan izleyebilirsiniz: {siparis_adresi(s)}" if _site() else ""
 
 
 def _kafeye(s: Siparis, baslik: str) -> list[Eposta]:
     adres = _kafe_adresi()
     if not adres:
         return []
-    musteri = s.kullanici
-    iletisim = f"{musteri.ad} <{musteri.e_posta}>" + (f", {musteri.telefon}" if musteri.telefon else "")
+    iletisim = f"{s.musteri_ad} <{s.musteri_eposta}>" + (f", {s.musteri_telefon}" if s.musteri_telefon else "")
+    if s.misafir:
+        iletisim += " (üye değil)"
     baglanti = f"\n\nYönetim paneli: {_site()}/yonetim/siparisler?ac={s.id}" if _site() else ""
     return [Eposta(adres, f"{baslik} #{s.id} · {TESLIMAT.get(s.teslimat_yontemi, '')}", f"Müşteri: {iletisim}\n\n{_ozet(s)}{baglanti}")]
 
@@ -71,19 +80,19 @@ def _kafeye(s: Siparis, baslik: str) -> list[Eposta]:
 def havale_siparisi_alindi(s: Siparis, odeme_bilgisi: str) -> list[Eposta]:
     """Havale secilen siparis olusunca: musteriye odeme talimati, kafeye bilgi."""
     metin = (
-        f"Merhaba {s.kullanici.ad},\n\n#{s.id} numaralı siparişinizi aldık. Ödemeniz ulaştığında hazırlamaya başlayacağız.\n\n"
+        f"Merhaba {s.musteri_ad},\n\n#{s.id} numaralı siparişinizi aldık. Ödemeniz ulaştığında hazırlamaya başlayacağız.\n\n"
         f"{odeme_bilgisi}\nAçıklamaya yazılacak sipariş no: {s.id}\n\n{_ozet(s)}{_siparis_baglantisi(s)}\n\nPaleo Coffee Ayvalık"
     )
-    return [Eposta(s.kullanici.e_posta, f"Siparişiniz alındı #{s.id}", metin)] + _kafeye(s, "Havale bekleyen sipariş")
+    return [Eposta(s.musteri_eposta, f"Siparişiniz alındı #{s.id}", metin)] + _kafeye(s, "Havale bekleyen sipariş")
 
 
 def odeme_alindi(s: Siparis) -> list[Eposta]:
     """Siparis odendi olunca (kart bildirimi veya havalenin elle onayi)."""
     metin = (
-        f"Merhaba {s.kullanici.ad},\n\n#{s.id} numaralı siparişinizin ödemesi alındı, kahveniz hazırlanıyor.\n\n"
+        f"Merhaba {s.musteri_ad},\n\n#{s.id} numaralı siparişinizin ödemesi alındı, kahveniz hazırlanıyor.\n\n"
         f"{_ozet(s)}{_siparis_baglantisi(s)}\n\nTeşekkürler,\nPaleo Coffee Ayvalık"
     )
-    return [Eposta(s.kullanici.e_posta, f"Ödemeniz alındı #{s.id}", metin)] + _kafeye(s, "Yeni sipariş: hazırlanacak")
+    return [Eposta(s.musteri_eposta, f"Ödemeniz alındı #{s.id}", metin)] + _kafeye(s, "Yeni sipariş: hazırlanacak")
 
 
 def yola_cikti(s: Siparis) -> list[Eposta]:
@@ -94,14 +103,14 @@ def yola_cikti(s: Siparis) -> list[Eposta]:
     else:
         konu = "Siparişiniz kargoda"
         govde = "siparişiniz kargoya verildi." + (f" Kargo takip numaranız: {s.takip_no}" if s.takip_no else "")
-    metin = f"Merhaba {s.kullanici.ad},\n\n#{s.id} numaralı {govde}{_siparis_baglantisi(s)}\n\nAfiyet olsun,\nPaleo Coffee Ayvalık"
-    return [Eposta(s.kullanici.e_posta, f"{konu} #{s.id}", metin)]
+    metin = f"Merhaba {s.musteri_ad},\n\n#{s.id} numaralı {govde}{_siparis_baglantisi(s)}\n\nAfiyet olsun,\nPaleo Coffee Ayvalık"
+    return [Eposta(s.musteri_eposta, f"{konu} #{s.id}", metin)]
 
 
 def iptal_edildi(s: Siparis, zaman_asimi: bool) -> list[Eposta]:
     neden = "ödeme tamamlanmadığı için" if zaman_asimi else ""
     metin = (
-        f"Merhaba {s.kullanici.ad},\n\n#{s.id} numaralı siparişiniz {neden + ' ' if neden else ''}iptal edildi."
+        f"Merhaba {s.musteri_ad},\n\n#{s.id} numaralı siparişiniz {neden + ' ' if neden else ''}iptal edildi."
         " Kartınızdan çekim yapıldıysa ücret iade edilir. Sorunuz olursa bizimle iletişime geçebilirsiniz.\n\nPaleo Coffee Ayvalık"
     )
-    return [Eposta(s.kullanici.e_posta, f"Siparişiniz iptal edildi #{s.id}", metin)]
+    return [Eposta(s.musteri_eposta, f"Siparişiniz iptal edildi #{s.id}", metin)]

@@ -39,6 +39,7 @@ const MESAJLAR: Record<string, string> = {
   "Kart ile odeme su an kullanilamiyor": "Kartla ödeme şu an kullanılamıyor.",
   "Odeme baslatilamadi. Lutfen tekrar deneyin.": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
   "Metinler guncellendi, lutfen yeniden okuyun": "Metinler güncellendi, lütfen sayfayı yenileyip tekrar okuyun.",
+  "Siparis icin KVKK Aydinlatma Metni okunmalidir": "Sipariş için KVKK Aydınlatma Metni'ni onaylayın.",
   "Havale ile odeme su an kullanilamiyor": "Havale ile ödeme şu an kullanılamıyor.",
   "Gorsel en fazla 12 MB olabilir": "Görsel en fazla 12 MB olabilir.",
   "Yalnizca JPG, PNG veya WebP yuklenebilir": "Yalnızca JPG, PNG veya WebP yüklenebilir.",
@@ -64,10 +65,10 @@ function mesajCevir(detay: unknown, durum: number): string {
   return "Bir sorun oluştu. Lütfen tekrar deneyin.";
 }
 
-type Secenekler = { method?: string; json?: unknown; form?: Record<string, string>; dosya?: FormData };
+type Secenekler = { method?: string; json?: unknown; form?: Record<string, string>; dosya?: FormData; basliklar?: Record<string, string> };
 
 export async function api<T>(yol: string, s: Secenekler = {}): Promise<T> {
-  const basliklar: Record<string, string> = {};
+  const basliklar: Record<string, string> = { ...s.basliklar };
   const token = tokenAl();
   if (token) basliklar.Authorization = `Bearer ${token}`;
   let govde: BodyInit | undefined;

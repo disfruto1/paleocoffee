@@ -4,7 +4,8 @@ import { SITE } from "@/lib/site";
 
 // [TASLAK] Bu metinler hukuki kontrol yapilmadan ve [koseli parantez] alanlari doldurulmadan yayina alinmamali.
 // PayTR basvurusunda da bu sayfalarin sitede bulunmasi istenir.
-const SATICI = `[İşletme unvanı], ${SITE.adres}. Telefon: ${SITE.telefon}. E-posta: ${SITE.eposta}. Vergi dairesi / no: [....]. MERSİS: [....]`;
+const EPOSTA = SITE.eposta || "[e-posta]";
+const SATICI = `[İşletme unvanı], ${SITE.adres}. Telefon: ${SITE.telefon}. E-posta: ${EPOSTA}. Vergi dairesi / no: [....]. MERSİS: [....]`;
 
 const SAYFALAR: Record<string, { baslik: string; govde: React.ReactNode }> = {
   "teslimat-ve-iade": {
@@ -21,7 +22,7 @@ const SAYFALAR: Record<string, { baslik: string; govde: React.ReactNode }> = {
         <h2>Cayma hakkı ve iade</h2>
         <p>Ekipman ürünlerinde, teslim tarihinden itibaren 14 gün içinde gerekçe göstermeden cayma hakkınızı kullanabilirsiniz. Ürün kullanılmamış ve yeniden satılabilir durumda olmalıdır.</p>
         <p>Kahve gıda ürünüdür. Ambalajı açılmış kahvelerde ve isteğinize göre öğütülerek hazırlanan kahvelerde, Mesafeli Sözleşmeler Yönetmeliği m. 15 uyarınca cayma hakkı bulunmaz. Hasarlı veya hatalı ürün ulaştıysa teslimattan itibaren [3] gün içinde bize yazın, ürünü değiştirir veya bedelini iade ederiz.</p>
-        <p>İade talepleriniz için: {SITE.eposta}. Kartla yapılan ödemelerin iadesi aynı karta yapılır; bankanıza bağlı olarak hesabınıza yansıması birkaç gün sürebilir.</p>
+        <p>İade talepleriniz için: {EPOSTA} veya {SITE.telefon}. Kartla yapılan ödemelerin iadesi aynı karta yapılır; bankanıza bağlı olarak hesabınıza yansıması birkaç gün sürebilir.</p>
       </>
     ),
   },
@@ -51,7 +52,7 @@ const SAYFALAR: Record<string, { baslik: string; govde: React.ReactNode }> = {
       <>
         <p><strong>Satıcı:</strong> {SATICI}</p>
         <p>Siparişinizdeki ürünlerin temel nitelikleri, KDV dahil toplam fiyatı, teslimat ücreti, ödeme ve teslimat bilgileri ödeme adımında sipariş özetinde gösterilir.</p>
-        <p>Cayma hakkının kullanılma şartları, süresi ve istisnaları &quot;Teslimat ve iade&quot; sayfasındadır. Şikâyet ve itirazlarınızı {SITE.eposta} adresine iletebilirsiniz.</p>
+        <p>Cayma hakkının kullanılma şartları, süresi ve istisnaları &quot;Teslimat ve iade&quot; sayfasındadır. Şikâyet ve itirazlarınızı {EPOSTA} adresine iletebilirsiniz.</p>
       </>
     ),
   },

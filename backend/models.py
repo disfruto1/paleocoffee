@@ -144,7 +144,13 @@ class TeslimatYontemi:
 class Siparis(Base):
     __tablename__ = "siparisler"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    kullanici_id: Mapped[int] = mapped_column(ForeignKey("kullanicilar.id"), nullable=False)
+    # Uye olmadan verilen sipariste bos; musteri bilgisi misafir_* alanlarindadir
+    kullanici_id: Mapped[int | None] = mapped_column(ForeignKey("kullanicilar.id"), index=True, nullable=True)
+    misafir_ad: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    misafir_eposta: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    misafir_telefon: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # Misafirin siparise erisim kodu bundan ve SECRET_KEY'den uretilir (bkz. misafir.py); kodun kendisi saklanmaz
+    erisim_tuzu: Mapped[str | None] = mapped_column(String(32), nullable=True)
     durum: Mapped[str] = mapped_column(String(30), default=SiparisDurum.ODEME_BEKLIYOR, nullable=False)
     toplam_tutar: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)  # urunler + teslimat ucreti
     teslimat_yontemi: Mapped[str] = mapped_column(String(20), default=TeslimatYontemi.KARGO, nullable=False)
@@ -155,12 +161,24 @@ class Siparis(Base):
     odeme_yontemi: Mapped[str] = mapped_column(String(10), default="kart", nullable=False)  # kart veya havale
     takip_no: Mapped[str | None] = mapped_column(String(100), nullable=True)
     olusturulma_tarihi: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    kullanici: Mapped[Kullanici] = relationship(back_populates="siparisler")
+    kullanici: Mapped[Kullanici | None] = relationship(back_populates="siparisler")
     kalemler: Mapped[list["SiparisKalemi"]] = relationship(back_populates="siparis", cascade="all, delete-orphan")
 
     @property
+    def misafir(self) -> bool:
+        return self.kullanici_id is None
+
+    @property
     def musteri_ad(self) -> str | None:
-        return self.kullanici.ad if self.kullanici else None
+        return self.kullanici.ad if self.kullanici else self.misafir_ad
+
+    @property
+    def musteri_eposta(self) -> str | None:
+        return self.kullanici.e_posta if self.kullanici else self.misafir_eposta
+
+    @property
+    def musteri_telefon(self) -> str | None:
+        return self.kullanici.telefon if self.kullanici else self.misafir_telefon
 
 class SiparisKalemi(Base):
     __tablename__ = "siparis_kalemleri"

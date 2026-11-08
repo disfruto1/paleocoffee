@@ -2,17 +2,20 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Hata, useGirisGerekli, Yukleniyor } from "@/components/ortak";
-import { useSepet } from "@/components/Saglayicilar";
+import { Hata, Yukleniyor } from "@/components/ortak";
+import { useOturum, useSepet } from "@/components/Saglayicilar";
 import { api } from "@/lib/api";
 import { fiyat } from "@/lib/bicim";
+import { kodKaydet } from "@/lib/misafir";
 import { kartlaOde, teslimatUcreti } from "@/lib/odeme";
 import type { Adres, Ayarlar, Siparis, TeslimatYontemi } from "@/lib/types";
+
+type MisafirSiparisi = Siparis & { erisim_kodu: string };
 
 const YENI = -1;
 
 export default function Odeme() {
-  const kullanici = useGirisGerekli();
+  const { kullanici, yukleniyor } = useOturum();
   const sepet = useSepet();
   const router = useRouter();
   const [ayarlar, setAyarlar] = useState<Ayarlar | null>(null);
@@ -25,13 +28,14 @@ export default function Odeme() {
   const [odemeTuru, setOdemeTuru] = useState<"kart" | "havale">("kart");
   const [telefon, setTelefon] = useState("");
   const [onay, setOnay] = useState(false);
+  const [misafir, setMisafir] = useState({ ad: "", e_posta: "", kvkk: false });
   const [hata, setHata] = useState<string | null>(null);
   const [bekle, setBekle] = useState(false);
 
   useEffect(() => {
-    if (!kullanici) return;
-    setTelefon(kullanici.telefon || "");
-    Promise.all([api<Ayarlar>("/ayarlar"), api<Adres[]>("/adresler")])
+    if (yukleniyor) return;
+    setTelefon(kullanici?.telefon || "");
+    Promise.all([api<Ayarlar>("/ayarlar"), kullanici ? api<Adres[]>("/adresler") : Promise.resolve([] as Adres[])])
       .then(([a, ad]) => {
         setAyarlar(a);
         setYontem(a.teslimat[0]?.yontem ?? null);
@@ -40,9 +44,9 @@ export default function Odeme() {
         if (ad.length) setAdresId(ad[0].id);
       })
       .catch((e) => setHata(e.message));
-  }, [kullanici]);
+  }, [kullanici, yukleniyor]);
 
-  if (!kullanici || (!ayarlar && !hata)) return <Yukleniyor />;
+  if (yukleniyor || (!ayarlar && !hata)) return <Yukleniyor />;
   if (!sepet.kalemler.length && !bekle) {
     return (
       <div className="kap py-28 text-center">
@@ -71,29 +75,40 @@ export default function Odeme() {
     }
     setBekle(true);
     try {
-      if (adresGerekli && adresId === YENI && adresiKaydet) {
+      if (kullanici && adresGerekli && adresId === YENI && adresiKaydet) {
         await api("/adresler", { json: { baslik: adresler.length ? "Yeni adres" : "Ev", adres } }).catch(() => undefined);
       }
-      const s = await api<Siparis>("/siparisler", {
-        json: {
-          teslimat_yontemi: yontem,
-          teslimat_adresi: adres,
-          siparis_notu: not.trim() || null,
-          odeme_yontemi: odemeTuru,
-          kalemler: sepet.kalemler.map((k) => ({ urun_id: k.urun_id, secenek_id: k.secenek_id, ogutme: k.ogutme, adet: k.adet })),
-        },
-      });
+      const govde = {
+        teslimat_yontemi: yontem,
+        teslimat_adresi: adres,
+        siparis_notu: not.trim() || null,
+        odeme_yontemi: odemeTuru,
+        kalemler: sepet.kalemler.map((k) => ({ urun_id: k.urun_id, secenek_id: k.secenek_id, ogutme: k.ogutme, adet: k.adet })),
+      };
+      let s: Siparis;
+      let kod: string | undefined;
+      if (kullanici) {
+        s = await api<Siparis>("/siparisler", { json: govde });
+      } else {
+        const m = await api<MisafirSiparisi>("/misafir/siparisler", {
+          json: { ...govde, ad: misafir.ad.trim(), e_posta: misafir.e_posta.trim(), telefon: telefon.trim(), aydinlatma_okundu: misafir.kvkk },
+        });
+        s = m;
+        kod = m.erisim_kodu;
+        kodKaydet(m.id, kod);
+      }
       sepet.bosalt();
+      const sayfa = (ek: string) => (kod ? `/siparis/${s.id}?${ek}#${kod}` : `/hesabim/siparis/${s.id}?${ek}`);
       if (odemeTuru === "kart") {
         try {
-          await kartlaOde(s.id, telefon);
+          await kartlaOde(s.id, telefon, kod);
           return;
         } catch (err) {
-          router.replace(`/hesabim/siparis/${s.id}?hata=${encodeURIComponent((err as Error).message)}`);
+          router.replace(sayfa(`hata=${encodeURIComponent((err as Error).message)}`));
           return;
         }
       }
-      router.replace(`/hesabim/siparis/${s.id}?yeni=1`);
+      router.replace(sayfa("yeni=1"));
     } catch (err) {
       setHata((err as Error).message);
       setBekle(false);
@@ -103,8 +118,34 @@ export default function Odeme() {
   return (
     <form onSubmit={siparisVer} className="kap grid gap-10 py-12 lg:grid-cols-[1fr_24rem]">
       <div className="space-y-10">
-        <h1 className="font-baslik text-4xl">Siparişi tamamla</h1>
+        <h1 className="font-baslik text-5xl font-semibold">Siparişi tamamla</h1>
         <Hata mesaj={hata} />
+
+        {!kullanici && (
+          <section>
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
+              <h2 className="font-baslik text-2xl">İletişim bilgileri</h2>
+              <Link href="/giris?sonra=/odeme" className="text-sm underline underline-offset-4 hover:text-vurgu">
+                Üye misiniz? Giriş yapın
+              </Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <input required maxLength={120} value={misafir.ad} onChange={(e) => setMisafir({ ...misafir, ad: e.target.value })} placeholder="Ad soyad" autoComplete="name" className="girdi" />
+              <input required type="email" value={misafir.e_posta} onChange={(e) => setMisafir({ ...misafir, e_posta: e.target.value })} placeholder="E-posta" autoComplete="email" className="girdi" />
+              <input required type="tel" value={telefon} onChange={(e) => setTelefon(e.target.value)} pattern="\+?[0-9][0-9 ()\-]{9,19}" placeholder="Telefon (05xx xxx xx xx)" autoComplete="tel" className="girdi" />
+            </div>
+            <p className="mt-2 text-sm text-soluk">
+              Üye olmadan sipariş veriyorsunuz; sipariş bilgileri ve takip bağlantısı e-postanıza gelir.{" "}
+              <Link href="/kayit?sonra=/odeme" className="underline underline-offset-4 hover:text-vurgu">Üye olursanız</Link> tüm siparişlerinizi Hesabım&apos;dan izleyebilirsiniz.
+            </p>
+            <label className="mt-3 flex gap-3 text-sm">
+              <input type="checkbox" required checked={misafir.kvkk} onChange={(e) => setMisafir({ ...misafir, kvkk: e.target.checked })} className="mt-0.5" />
+              <span>
+                <Link href="/sozlesmeler/kvkk" target="_blank" className="underline underline-offset-4">KVKK Aydınlatma Metni</Link>&apos;ni okudum.
+              </span>
+            </label>
+          </section>
+        )}
 
         <section>
           <h2 className="mb-4 font-baslik text-2xl">Teslimat</h2>
@@ -152,10 +193,12 @@ export default function Odeme() {
             {adresId === YENI && (
               <div className="mt-3 space-y-2">
                 <textarea value={yeniAdres} onChange={(e) => setYeniAdres(e.target.value)} rows={3} maxLength={500} required placeholder="Mahalle, sokak, bina ve daire no, ilçe / il" className="girdi" />
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={adresiKaydet} onChange={(e) => setAdresiKaydet(e.target.checked)} />
-                  Bu adresi kaydet
-                </label>
+                {kullanici && (
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={adresiKaydet} onChange={(e) => setAdresiKaydet(e.target.checked)} />
+                    Bu adresi kaydet
+                  </label>
+                )}
               </div>
             )}
           </section>
@@ -178,7 +221,7 @@ export default function Odeme() {
               </label>
             )}
           </div>
-          {odemeTuru === "kart" && ayarlar?.kart_odeme && (
+          {kullanici && odemeTuru === "kart" && ayarlar?.kart_odeme && (
             <label className="mt-3 block">
               <span className="mb-1 block text-sm">Telefon</span>
               <input type="tel" required value={telefon} onChange={(e) => setTelefon(e.target.value)} pattern="\+?[0-9][0-9 ()\-]{9,19}" placeholder="05xx xxx xx xx" autoComplete="tel" className="girdi" />

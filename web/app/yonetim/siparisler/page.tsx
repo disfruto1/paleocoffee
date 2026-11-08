@@ -44,19 +44,19 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
           <span className="ml-3 text-sm text-soluk">{tarih(s.olusturulma_tarihi)} · {TESLIMAT_ADLARI[s.teslimat_yontemi]}</span>
         </span>
         <span className="flex items-center gap-4 text-sm">
-          <span className="rounded-full bg-kum px-3 py-1">{durumAdi(s.durum, s.teslimat_yontemi)}</span>
+          <span className="bg-kum px-3 py-1">{durumAdi(s.durum, s.teslimat_yontemi)}</span>
           <span className="tabular-nums">{fiyat(s.toplam_tutar)}</span>
         </span>
       </button>
       {goster && (
-        <div className="mt-4 grid gap-6 rounded-xl bg-white p-5 text-sm md:grid-cols-2">
+        <div className="mt-4 grid gap-6 bg-white p-5 text-sm md:grid-cols-2">
           <div>
             <ul className="space-y-1">
               {s.kalemler.map((k) => (
                 <li key={k.id}>
                   <strong>{k.adet} ×</strong> {k.urun_adi}
                   {k.secenek_adi && ` · ${k.secenek_adi}`}
-                  {k.ogutme && <span className="ml-1 rounded bg-kum px-1.5">{k.ogutme}</span>}
+                  {k.ogutme && <span className="ml-1 bg-kum px-1.5">{k.ogutme}</span>}
                 </li>
               ))}
             </ul>
@@ -102,7 +102,7 @@ function Siparisler() {
     <div>
       <div className="flex flex-wrap items-center gap-2">
         {[["", "Tümü"], ...Object.entries(DURUMLAR)].map(([d, ad]) => (
-          <button key={d} onClick={() => setDurum(d)} className={`rounded-full border px-4 py-1.5 text-sm ${durum === d ? "border-murekkep bg-murekkep text-zemin" : "border-cizgi"}`}>
+          <button key={d} onClick={() => setDurum(d)} className={` border px-4 py-1.5 text-sm ${durum === d ? "border-murekkep bg-murekkep text-zemin" : "border-cizgi"}`}>
             {ad}
           </button>
         ))}

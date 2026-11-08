@@ -1,20 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-zemin: #f5efe4;
-  --color-kum: #e8dcc8;
-  --color-murekkep: #2b1e16;
-  --color-soluk: #6f6156;
-  --color-vurgu: #a8492a;
-  --color-zeytin: #5d6b3b;
-  --color-cizgi: #ddd0bb;
-  --font-baslik: var(--font-fraunces), Georgia, serif;
+  --color-zemin: #f4f1ec;
+  --color-kum: #e8e3da;
+  --color-murekkep: #1c1a17;
+  --color-soluk: #6b665e;
+  --color-vurgu: #b4532a;
+  --color-zeytin: #4f5a32;
+  --color-cizgi: #d6d0c5;
+  --font-baslik: var(--font-oswald), "Arial Narrow", sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 body {
   background: var(--color-zemin);
   color: var(--color-murekkep);
+}
+
+/* Basliklar: dar ve buyuk harf */
+.font-baslik {
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+/* Kucuk etiketler: kavrum, mensei, bolum adlari */
+@utility etiket {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 @utility kap {
@@ -31,12 +47,13 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
   background: var(--color-murekkep);
   color: var(--color-zemin);
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.9rem 1.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   transition: background 150ms;
   &:hover {
     background: var(--color-vurgu);
@@ -51,11 +68,12 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  border: 1px solid var(--color-murekkep);
-  padding: 0.7rem 1.4rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border: 1px solid currentColor;
+  padding: calc(0.9rem - 1px) calc(1.75rem - 1px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   &:hover {
     border-color: var(--color-vurgu);
     color: var(--color-vurgu);
@@ -68,7 +86,6 @@ body {
 
 @utility girdi {
   width: 100%;
-  border-radius: 0.75rem;
   border: 1px solid var(--color-cizgi);
   background: white;
   padding: 0.7rem 0.9rem;
@@ -82,7 +99,8 @@ body {
 @utility metin {
   & h2 {
     font-family: var(--font-baslik);
-    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-size: 1.4rem;
     margin-top: 2rem;
     margin-bottom: 0.75rem;
   }
@@ -95,5 +113,17 @@ body {
   & ul {
     list-style: disc;
     padding-left: 1.25rem;
+  }
+}
+
+/* Ana sayfadaki kayan mensei seridi */
+@keyframes kaydir {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@utility kayan {
+  animation: kaydir 40s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 }

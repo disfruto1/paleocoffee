@@ -36,7 +36,7 @@ export default function YonetimOzet() {
     <div className="space-y-10">
       <Hata mesaj={hata} />
       {sorunlar.length > 0 && (
-        <section className="rounded-2xl border border-vurgu/40 bg-vurgu/5 p-6">
+        <section className="border border-vurgu/40 bg-vurgu/5 p-6">
           <h2 className="font-baslik text-xl text-vurgu">İncelenmesi gereken ödemeler</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {sorunlar.map((s) => (
@@ -58,7 +58,7 @@ export default function YonetimOzet() {
               ["Bugünkü tutar", fiyat(o.bugun_tutar)],
               ["Ödenmiş toplam ciro", fiyat(o.odenmis_toplam_ciro)],
             ].map(([b, d]) => (
-              <div key={b} className="rounded-2xl bg-kum p-5">
+              <div key={b} className="bg-kum p-5">
                 <p className="text-sm text-soluk">{b}</p>
                 <p className="mt-1 text-2xl tabular-nums">{d}</p>
               </div>

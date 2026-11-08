@@ -17,18 +17,18 @@ export default async function Magaza({ searchParams }: { searchParams: Promise<{
 
   return (
     <div className="kap py-12">
-      <h1 className="font-baslik text-4xl md:text-5xl">Mağaza</h1>
+      <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Kahveler</h1>
       <p className="mt-3 max-w-xl text-soluk">Çekirdek ya da demleme yöntemine göre öğütülmüş kahveler ve evde iyi kahve için ekipmanlar.</p>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
-        <Link href="/magaza" className={`rounded-full border px-4 py-1.5 text-sm ${!kategoriId ? "border-murekkep bg-murekkep text-zemin" : "border-cizgi hover:border-murekkep"}`}>
+        <Link href="/magaza" className={` border px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${!kategoriId ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"}`}>
           Tümü
         </Link>
         {kategoriler.map((k) => (
           <Link
             key={k.id}
             href={`/magaza?kategori=${k.id}`}
-            className={`rounded-full border px-4 py-1.5 text-sm ${kategoriId === String(k.id) ? "border-murekkep bg-murekkep text-zemin" : "border-cizgi hover:border-murekkep"}`}
+            className={` border px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${kategoriId === String(k.id) ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"}`}
           >
             {k.ad}
           </Link>
@@ -40,7 +40,7 @@ export default async function Magaza({ searchParams }: { searchParams: Promise<{
       </div>
 
       {urunler.length ? (
-        <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-4">
           {urunler.map((u) => (
             <UrunKarti key={u.id} urun={u} />
           ))}

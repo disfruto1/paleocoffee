@@ -18,7 +18,7 @@ export function useGirisGerekli(rol?: "yonetici") {
 export function Hata({ mesaj }: { mesaj: string | null }) {
   if (!mesaj) return null;
   return (
-    <p role="alert" className="rounded-xl bg-vurgu/10 px-4 py-3 text-sm text-vurgu">
+    <p role="alert" className="bg-vurgu/10 px-4 py-3 text-sm text-vurgu">
       {mesaj}
     </p>
   );

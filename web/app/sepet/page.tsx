@@ -26,7 +26,7 @@ export default function SepetSayfasi() {
             const a = kalemAnahtari(k);
             return (
               <li key={a} className="flex gap-4 py-5">
-                <Link href={urunAdresi({ id: k.urun_id, ad: k.ad })} className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-kum">
+                <Link href={urunAdresi({ id: k.urun_id, ad: k.ad })} className="h-24 w-20 shrink-0 overflow-hidden bg-kum">
                   <UrunGorseli urun={k} />
                 </Link>
                 <div className="flex flex-1 flex-col justify-between gap-2 sm:flex-row">
@@ -38,7 +38,7 @@ export default function SepetSayfasi() {
                     </button>
                   </div>
                   <div className="flex items-center justify-between gap-6 sm:flex-col sm:items-end">
-                    <div className="flex items-center rounded-full border border-cizgi text-sm">
+                    <div className="flex items-center border border-cizgi text-sm">
                       <button className="px-3 py-1.5" onClick={() => adetDegistir(a, k.adet - 1)} aria-label="Azalt">−</button>
                       <span className="w-6 text-center tabular-nums">{k.adet}</span>
                       <button className="px-3 py-1.5" onClick={() => adetDegistir(a, k.adet + 1)} aria-label="Arttır">+</button>
@@ -50,7 +50,7 @@ export default function SepetSayfasi() {
             );
           })}
         </ul>
-        <aside className="h-fit rounded-2xl bg-kum p-6">
+        <aside className="h-fit bg-kum p-6">
           <div className="flex justify-between">
             <span>Ara toplam</span>
             <span className="tabular-nums">{fiyat(toplam)}</span>

@@ -111,7 +111,7 @@ export default function Odeme() {
             {ayarlar?.teslimat.map((t) => {
               const u = teslimatUcreti(t.ucret, sepet.toplam, ayarlar.ucretsiz_teslimat_siniri);
               return (
-                <label key={t.yontem} className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4 ${yontem === t.yontem ? "border-murekkep bg-white" : "border-cizgi"}`}>
+                <label key={t.yontem} className={`flex cursor-pointer items-center justify-between gap-4 border p-4 ${yontem === t.yontem ? "border-murekkep bg-white" : "border-cizgi"}`}>
                   <span className="flex items-center gap-3">
                     <input type="radio" name="yontem" checked={yontem === t.yontem} onChange={() => setYontem(t.yontem)} />
                     {t.ad}
@@ -133,7 +133,7 @@ export default function Odeme() {
             <h2 className="mb-4 font-baslik text-2xl">Adres</h2>
             <div className="space-y-2">
               {adresler.map((a) => (
-                <label key={a.id} className={`flex cursor-pointer gap-3 rounded-xl border p-4 ${adresId === a.id ? "border-murekkep bg-white" : "border-cizgi"}`}>
+                <label key={a.id} className={`flex cursor-pointer gap-3 border p-4 ${adresId === a.id ? "border-murekkep bg-white" : "border-cizgi"}`}>
                   <input type="radio" name="adres" checked={adresId === a.id} onChange={() => setAdresId(a.id)} className="mt-1" />
                   <span>
                     <span className="font-medium">{a.baslik}</span>
@@ -142,7 +142,7 @@ export default function Odeme() {
                 </label>
               ))}
               {adresler.length > 0 && (
-                <label className={`flex cursor-pointer gap-3 rounded-xl border p-4 ${adresId === YENI ? "border-murekkep bg-white" : "border-cizgi"}`}>
+                <label className={`flex cursor-pointer gap-3 border p-4 ${adresId === YENI ? "border-murekkep bg-white" : "border-cizgi"}`}>
                   <input type="radio" name="adres" checked={adresId === YENI} onChange={() => setAdresId(YENI)} />
                   Yeni adres
                 </label>
@@ -165,13 +165,13 @@ export default function Odeme() {
           {!odemeVar && <p className="text-soluk">Online ödeme şu an kapalı. Sipariş için lütfen bizimle iletişime geçin.</p>}
           <div className="space-y-2">
             {ayarlar?.kart_odeme && (
-              <label className={`flex cursor-pointer gap-3 rounded-xl border p-4 ${odemeTuru === "kart" ? "border-murekkep bg-white" : "border-cizgi"}`}>
+              <label className={`flex cursor-pointer gap-3 border p-4 ${odemeTuru === "kart" ? "border-murekkep bg-white" : "border-cizgi"}`}>
                 <input type="radio" name="odeme" checked={odemeTuru === "kart"} onChange={() => setOdemeTuru("kart")} />
                 Kredi / banka kartı <span className="text-sm text-soluk">(PayTR güvenli ödeme)</span>
               </label>
             )}
             {ayarlar?.odeme_bilgisi && (
-              <label className={`flex cursor-pointer gap-3 rounded-xl border p-4 ${odemeTuru === "havale" ? "border-murekkep bg-white" : "border-cizgi"}`}>
+              <label className={`flex cursor-pointer gap-3 border p-4 ${odemeTuru === "havale" ? "border-murekkep bg-white" : "border-cizgi"}`}>
                 <input type="radio" name="odeme" checked={odemeTuru === "havale"} onChange={() => setOdemeTuru("havale")} />
                 Havale / EFT
               </label>
@@ -183,7 +183,7 @@ export default function Odeme() {
               <input type="tel" required value={telefon} onChange={(e) => setTelefon(e.target.value)} pattern="\+?[0-9][0-9 ()\-]{9,19}" placeholder="05xx xxx xx xx" autoComplete="tel" className="girdi" />
             </label>
           )}
-          {odemeTuru === "havale" && ayarlar?.odeme_bilgisi && <p className="mt-3 rounded-xl bg-kum p-4 text-sm">{ayarlar.odeme_bilgisi}</p>}
+          {odemeTuru === "havale" && ayarlar?.odeme_bilgisi && <p className="mt-3 bg-kum p-4 text-sm">{ayarlar.odeme_bilgisi}</p>}
         </section>
 
         <section>
@@ -194,7 +194,7 @@ export default function Odeme() {
         </section>
       </div>
 
-      <aside className="h-fit space-y-4 rounded-2xl bg-kum p-6 lg:sticky lg:top-24">
+      <aside className="h-fit space-y-4 bg-kum p-6 lg:sticky lg:top-24">
         <h2 className="font-baslik text-xl">Sipariş özeti</h2>
         <ul className="space-y-3 text-sm">
           {sepet.kalemler.map((k) => (

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { IBM_Plex_Mono, Inter, Oswald } from "next/font/google";
 import { Alt } from "@/components/Alt";
 import { Saglayicilar } from "@/components/Saglayicilar";
 import { Ust } from "@/components/Ust";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
-const fraunces = Fraunces({ subsets: ["latin", "latin-ext"], variable: "--font-fraunces" });
+const oswald = Oswald({ subsets: ["latin", "latin-ext"], variable: "--font-oswald" });
+const plexMono = IBM_Plex_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "500"], variable: "--font-plex-mono" });
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function KokYerlesim({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="tr" className={`${oswald.variable} ${inter.variable} ${plexMono.variable}`}>
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <Saglayicilar>
           <Ust />

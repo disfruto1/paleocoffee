@@ -35,7 +35,7 @@ export default function Iletisim() {
           </a>
         </section>
       </div>
-      <section className="mt-16 rounded-3xl bg-kum p-8 md:p-10">
+      <section className="mt-16 bg-kum p-8 md:p-10">
         <h2 className="font-baslik text-2xl">Toptan ve kafe işbirlikleri</h2>
         <p className="mt-2 max-w-2xl text-soluk">
           İşletmeniz için düzenli kahve tedariki veya ekipman danışmanlığı istiyorsanız e-posta ile yazın, size özel teklif hazırlayalım.

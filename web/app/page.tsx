@@ -3,6 +3,8 @@ import { UrunKarti } from "@/components/UrunKarti";
 import { SITE } from "@/lib/site";
 import { urunleriGetir } from "@/lib/sunucu";
 
+const MENSEILER = ["Etiyopya", "Kolombiya", "Kenya", "Brezilya", "Guatemala", "Ruanda", "Kosta Rika", "Endonezya"];
+
 export default async function AnaSayfa() {
   let urunler = await urunleriGetir("&one_cikan=true");
   if (!urunler.length) urunler = await urunleriGetir();
@@ -10,89 +12,110 @@ export default async function AnaSayfa() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-murekkep text-zemin">
-        <div className="kap grid items-center gap-10 py-20 md:grid-cols-2 md:py-28">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-zemin/60">Ayvalık · Nitelikli kahve</p>
-            <h1 className="mt-4 font-baslik text-5xl leading-[1.05] md:text-6xl">
-              Kahvenin en eski hâli, <em className="text-[#e3a17f]">bugünün özeniyle.</em>
-            </h1>
-            <p className="mt-6 max-w-md text-lg text-zemin/75">
-              Küçük partiler halinde kavurduğumuz çekirdekler, demleme ekipmanları ve Ayvalık&apos;ın taş sokaklarında bir fincan sakinlik.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/magaza" className="dugme bg-zemin text-murekkep hover:bg-[#e3a17f] hover:text-murekkep">
-                Kahveleri keşfet
-              </Link>
-              <Link href="/iletisim" className="dugme-ikincil border-zemin/40 hover:border-zemin hover:text-zemin">
-                Kafeye uğra
-              </Link>
-            </div>
-          </div>
-          <div className="relative mx-auto aspect-square w-full max-w-md" aria-hidden>
-            <div className="absolute inset-0 rounded-full bg-vurgu/30 blur-3xl" />
-            <div className="absolute inset-[12%] rounded-full border border-zemin/20" />
-            <div className="absolute inset-[24%] rounded-full bg-[radial-gradient(circle_at_35%_30%,#7a4a2e,#2b1e16_70%)] shadow-2xl" />
-            <div className="absolute inset-[36%] rounded-full bg-[radial-gradient(circle_at_40%_35%,#c58a5c,#5a3420_75%)]" />
+      <section className="grid min-h-[calc(100svh-6.5rem)] bg-murekkep text-zemin lg:grid-cols-2">
+        <div className="kap flex flex-col justify-end py-14 lg:mx-0 lg:max-w-none lg:px-12 lg:py-20">
+          <p className="etiket text-zemin/60">Ayvalık · Nitelikli kahve · Kavurma evi</p>
+          <h1 className="font-baslik mt-6 text-[clamp(3.5rem,9vw,8rem)] leading-[1.1] font-semibold">
+            Kahvenin
+            <br />
+            en eski
+            <br />
+            <span className="text-vurgu">hâli.</span>
+          </h1>
+          <p className="mt-8 max-w-md text-lg text-zemin/70">
+            Küçük partiler halinde kavrulmuş tek köken kahveler, demleme ekipmanları ve Ayvalık&apos;ın taş sokaklarında bir fincan sakinlik.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link href="/magaza" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Kahveleri keşfet</Link>
+            <Link href="/iletisim" className="dugme-ikincil hover:text-vurgu">Kafeye uğra</Link>
           </div>
         </div>
+        <div
+          className="min-h-80 bg-cover bg-center"
+          style={{ backgroundImage: "url(/gorseller/hero.jpg), linear-gradient(160deg, #5b3a26, #1c1a17 80%)" }}
+          role="img"
+          aria-label="Paleo Coffee"
+        />
       </section>
 
-      <section className="kap grid gap-8 py-16 sm:grid-cols-3">
-        {[
-          ["Taze kavrum", "Her hafta küçük partiler halinde kavrulur, kavrum tarihiyle gönderilir."],
-          ["İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
-          ["Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da kafeden teslim al."],
-        ].map(([b, m]) => (
-          <div key={b} className="border-t border-murekkep pt-5">
-            <h2 className="font-baslik text-xl">{b}</h2>
-            <p className="mt-2 text-soluk">{m}</p>
-          </div>
-        ))}
-      </section>
+      <div className="overflow-hidden border-b border-murekkep bg-vurgu py-3 text-zemin" aria-hidden>
+        <div className="kayan flex w-max">
+          {[0, 1].map((i) => (
+            <p key={i} className="font-baslik flex shrink-0 text-xl">
+              {MENSEILER.map((m) => (
+                <span key={m} className="px-6">{m} <span className="pl-6 text-zemin/50">✳</span></span>
+              ))}
+            </p>
+          ))}
+        </div>
+      </div>
 
       {urunler.length > 0 && (
-        <section className="kap py-10">
-          <div className="mb-8 flex items-end justify-between">
-            <h2 className="font-baslik text-3xl md:text-4xl">Bu hafta kavurduklarımız</h2>
-            <Link href="/magaza" className="text-sm underline underline-offset-4 hover:text-vurgu">
-              Tümü
-            </Link>
+        <section className="kap py-20">
+          <div className="mb-10 flex items-end justify-between gap-4 border-b border-murekkep pb-4">
+            <h2 className="font-baslik text-4xl md:text-6xl">Bu hafta kavrulanlar</h2>
+            <Link href="/magaza" className="etiket shrink-0 hover:text-vurgu">Tümünü gör →</Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
-            {urunler.map((u) => (
-              <UrunKarti key={u.id} urun={u} />
-            ))}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-4">
+            {urunler.map((u) => <UrunKarti key={u.id} urun={u} />)}
           </div>
         </section>
       )}
 
-      <section className="kap py-16">
-        <div className="grid overflow-hidden rounded-3xl bg-zeytin text-zemin md:grid-cols-2">
-          <div className="p-10 md:p-14">
-            <p className="text-sm uppercase tracking-[0.2em] text-zemin/60">Kafemiz</p>
-            <h2 className="mt-3 font-baslik text-3xl md:text-4xl">Ayvalık&apos;ta bir mola</h2>
-            <p className="mt-4 text-zemin/80">
-              Espresso bazlı içecekler, filtre kahveler ve ev yapımı tatlılar. Çekirdeğini seç, nasıl demlendiğini izle; sorularını barista&apos;mıza sor.
-            </p>
-            <div className="mt-6 space-y-1 text-sm text-zemin/80">
-              <p>{SITE.adres}</p>
-              {SITE.saatler.map((s) => (
-                <p key={s.gun}>
-                  {s.gun}: {s.saat}
-                </p>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/menu" className="dugme bg-zemin text-murekkep hover:bg-kum hover:text-murekkep">
-                Menüye göz at
-              </Link>
-              <a href={SITE.haritaAdresi} target="_blank" rel="noopener" className="dugme-ikincil border-zemin/40 hover:border-zemin hover:text-zemin">
-                Yol tarifi
-              </a>
-            </div>
+      <section className="border-y border-murekkep bg-kum">
+        <div className="kap py-24 text-center">
+          <p className="etiket text-soluk">Neden Paleo</p>
+          <p className="font-baslik mx-auto mt-6 max-w-5xl text-[clamp(2.25rem,5.5vw,4.5rem)] leading-[1.08] font-semibold">
+            İyi kahvenin sırrı karmaşık tariflerde değil; doğru çekirdekte, <span className="text-vurgu">özenli kavrumda</span>, sabırlı demlemede.
+          </p>
+        </div>
+      </section>
+
+      <section className="kap mt-px">
+        <div className="grid gap-px border border-t-0 border-murekkep bg-murekkep md:grid-cols-3">
+        {[
+          ["01", "Taze kavrum", "Her hafta küçük partiler halinde kavrulur, paketin üzerinde kavrum tarihiyle gönderilir."],
+          ["02", "İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
+          ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da kafeden teslim al."],
+        ].map(([no, b, m]) => (
+          <div key={no} className="bg-zemin p-8 md:p-10">
+            <p className="etiket text-vurgu">{no}</p>
+            <h3 className="font-baslik mt-4 text-2xl">{b}</h3>
+            <p className="mt-3 text-soluk">{m}</p>
           </div>
-          <div className="min-h-64 bg-[linear-gradient(135deg,#6f7d48,#3f4a25)]" aria-hidden />
+        ))}
+        </div>
+      </section>
+
+      <section className="kap mt-20 grid md:grid-cols-2">
+        <div
+          className="min-h-80 bg-cover bg-center"
+          style={{ backgroundImage: "url(/gorseller/kafe.jpg), linear-gradient(135deg, #6b7a45, #2f3820)" }}
+          role="img"
+          aria-label="Paleo Coffee kafe"
+        />
+        <div className="bg-murekkep p-10 text-zemin md:p-14">
+          <p className="etiket text-zemin/60">Kafemiz</p>
+          <h2 className="font-baslik mt-4 text-5xl leading-[1.1] md:text-6xl">Ayvalık&apos;ta bir mola</h2>
+          <p className="mt-6 text-zemin/75">
+            Espresso bazlı içecekler, filtre kahveler ve ev yapımı tatlılar. Çekirdeğini seç, nasıl demlendiğini izle; sorularını baristamıza sor.
+          </p>
+          <dl className="mt-8 border-t border-zemin/20 text-sm">
+            <div className="flex justify-between gap-4 border-b border-zemin/20 py-3">
+              <dt className="etiket text-zemin/50">Adres</dt>
+              <dd className="text-right">{SITE.adres}</dd>
+            </div>
+            {SITE.saatler.map((s) => (
+              <div key={s.gun} className="flex justify-between gap-4 border-b border-zemin/20 py-3">
+                <dt className="etiket text-zemin/50">{s.gun}</dt>
+                <dd className="tabular-nums">{s.saat}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/menu" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Menü</Link>
+            <a href={SITE.haritaAdresi} target="_blank" rel="noopener" className="dugme-ikincil hover:text-vurgu">Yol tarifi</a>
+          </div>
         </div>
       </section>
     </>

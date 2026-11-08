@@ -37,22 +37,23 @@ export default async function UrunSayfasi({ params }: Parametre) {
 
   return (
     <div className="kap py-10">
-      <Link href="/magaza" className="text-sm text-soluk hover:text-vurgu">
-        ← Mağaza
+      <Link href="/magaza" className="etiket text-soluk hover:text-vurgu">
+        ← Tüm kahveler
       </Link>
       <div className="mt-6 grid gap-10 md:grid-cols-2 lg:gap-16">
-        <div className="aspect-square overflow-hidden rounded-3xl bg-kum">
+        <div className="aspect-square overflow-hidden bg-kum md:sticky md:top-32 md:self-start">
           <UrunGorseli urun={urun} />
         </div>
         <div>
-          <h1 className="font-baslik text-4xl leading-tight md:text-5xl">{urun.ad}</h1>
+          {urun.mensei && <p className="etiket text-vurgu">{urun.mensei}</p>}
+          <h1 className="font-baslik mt-2 text-5xl leading-[1.1] font-semibold md:text-6xl">{urun.ad}</h1>
           {urun.aciklama && <p className="mt-5 whitespace-pre-line leading-relaxed text-soluk">{urun.aciklama}</p>}
           {bilgiler.length > 0 && (
-            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-cizgi py-6 text-sm">
+            <dl className="mt-8 grid grid-cols-2 border-l border-t border-murekkep text-sm">
               {bilgiler.map(([b, d]) => (
-                <div key={b}>
-                  <dt className="text-soluk">{b}</dt>
-                  <dd className="mt-0.5 font-medium">{d}</dd>
+                <div key={b} className="border-b border-r border-murekkep p-4">
+                  <dt className="etiket text-soluk">{b}</dt>
+                  <dd className="mt-1 font-medium">{d}</dd>
                 </div>
               ))}
             </dl>

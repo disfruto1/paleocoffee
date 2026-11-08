@@ -72,7 +72,7 @@ function KayitFormu() {
           <input name="sifre" type="password" required minLength={6} maxLength={72} autoComplete="new-password" className="girdi" />
         </label>
         {metinler && (
-          <div className="space-y-3 rounded-xl bg-kum p-4 text-sm">
+          <div className="space-y-3 bg-kum p-4 text-sm">
             <label className="flex gap-3">
               <input type="checkbox" name="aydinlatma" required className="mt-1" />
               <span>
@@ -82,7 +82,7 @@ function KayitFormu() {
                 &apos;ni okudum.
               </span>
             </label>
-            {aydinlatmaAcik && <div className="max-h-56 overflow-y-auto whitespace-pre-line rounded-lg bg-white p-3 text-xs text-soluk">{metinler.aydinlatma}</div>}
+            {aydinlatmaAcik && <div className="max-h-56 overflow-y-auto whitespace-pre-line bg-white p-3 text-xs text-soluk">{metinler.aydinlatma}</div>}
             <label className="flex gap-3">
               <input type="checkbox" name="eposta_izni" className="mt-1" />
               <span>{metinler.eposta_izni}</span>

@@ -38,7 +38,7 @@ export function SepeteEkle({ urun, ogutmeler, tukendi }: { urun: Urun; ogutmeler
       <p className="text-3xl tabular-nums">{fiyat(Number(birim) * adet)}</p>
       {secenekler.length > 0 && (
         <fieldset>
-          <legend className="mb-2 text-sm font-medium">Miktar</legend>
+          <legend className="etiket mb-3">Miktar</legend>
           <div className="flex flex-wrap gap-2">
             {secenekler.map((s) => {
               const bitti = s.stok !== null && s.stok <= 0;
@@ -48,7 +48,7 @@ export function SepeteEkle({ urun, ogutmeler, tukendi }: { urun: Urun; ogutmeler
                   type="button"
                   disabled={bitti}
                   onClick={() => { setSecenekId(s.id); setEklendi(false); }}
-                  className={`rounded-full border px-4 py-2 text-sm ${s.id === secenekId ? "border-murekkep bg-murekkep text-zemin" : "border-cizgi hover:border-murekkep"} ${bitti ? "line-through opacity-40" : ""}`}
+                  className={` border px-4 py-2 text-sm ${s.id === secenekId ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"} ${bitti ? "line-through opacity-40" : ""}`}
                 >
                   {s.ad} · {fiyat(s.fiyat)}
                 </button>
@@ -59,7 +59,7 @@ export function SepeteEkle({ urun, ogutmeler, tukendi }: { urun: Urun; ogutmeler
       )}
       {urun.ogutme_secilebilir && ogutmeler.length > 0 && (
         <label className="block">
-          <span className="mb-2 block text-sm font-medium">Öğütme</span>
+          <span className="etiket mb-3 block">Öğütme</span>
           <select value={ogutme} onChange={(e) => { setOgutme(e.target.value); setEklendi(false); }} className="girdi">
             {ogutmeler.map((o) => (
               <option key={o}>{o}</option>
@@ -68,7 +68,7 @@ export function SepeteEkle({ urun, ogutmeler, tukendi }: { urun: Urun; ogutmeler
         </label>
       )}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center rounded-full border border-cizgi">
+        <div className="flex items-center border border-murekkep">
           <button type="button" className="px-4 py-3" onClick={() => setAdet(Math.max(1, adet - 1))} aria-label="Azalt">−</button>
           <span className="w-8 text-center tabular-nums">{adet}</span>
           <button type="button" className="px-4 py-3" onClick={() => setAdet(Math.min(stok ?? 99, adet + 1, 99))} aria-label="Arttır">+</button>

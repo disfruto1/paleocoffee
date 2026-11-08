@@ -66,7 +66,7 @@ export default function Hesabim() {
                     <span className="ml-3 text-sm text-soluk">{tarih(s.olusturulma_tarihi)} · {TESLIMAT_ADLARI[s.teslimat_yontemi]}</span>
                   </span>
                   <span className="flex items-center gap-4 text-sm">
-                    <span className={`rounded-full px-3 py-1 ${s.durum === "odeme_bekliyor" ? "bg-vurgu/10 text-vurgu" : s.durum === "iptal_edildi" ? "bg-cizgi" : "bg-zeytin/15 text-zeytin"}`}>
+                    <span className={` px-3 py-1 ${s.durum === "odeme_bekliyor" ? "bg-vurgu/10 text-vurgu" : s.durum === "iptal_edildi" ? "bg-cizgi" : "bg-zeytin/15 text-zeytin"}`}>
                       {durumAdi(s.durum, s.teslimat_yontemi)}
                     </span>
                     <span className="tabular-nums">{fiyat(s.toplam_tutar)}</span>
@@ -85,7 +85,7 @@ export default function Hesabim() {
         ) : (
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {adresler.map((a) => (
-              <li key={a.id} className="rounded-xl border border-cizgi p-4">
+              <li key={a.id} className="border border-cizgi p-4">
                 <p className="font-medium">{a.baslik} {a.varsayilan && <span className="text-xs text-soluk">(varsayılan)</span>}</p>
                 <p className="mt-1 text-sm text-soluk">{a.adres}</p>
                 <div className="mt-3 flex gap-4 text-sm">

@@ -88,7 +88,7 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
   );
 
   return (
-    <form onSubmit={kaydet} className="space-y-6 rounded-2xl bg-white p-6">
+    <form onSubmit={kaydet} className="space-y-6 bg-white p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-baslik text-2xl">{urun ? "Ürünü düzenle" : "Yeni ürün"}</h2>
         {!urun && (
@@ -225,7 +225,7 @@ function Urunler() {
           const stoklar = u.secenekler.filter((s) => s.aktif).map((s) => `${s.ad}: ${s.stok ?? "∞"}`).join(", ");
           return (
             <li key={u.id} className={`flex items-center gap-4 py-3 ${u.aktif ? "" : "opacity-50"}`}>
-              <div className="h-14 w-12 shrink-0 overflow-hidden rounded-lg bg-kum"><UrunGorseli urun={u} /></div>
+              <div className="h-14 w-12 shrink-0 overflow-hidden bg-kum"><UrunGorseli urun={u} /></div>
               <div className="flex-1">
                 <p className="font-medium">{u.ad} {u.one_cikan && <span className="text-xs text-vurgu">★ ana sayfa</span>} {!u.aktif && <span className="text-xs">(satışta değil)</span>}</p>
                 <p className="text-sm text-soluk">

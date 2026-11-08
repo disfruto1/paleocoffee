@@ -56,16 +56,16 @@ function SiparisDetay() {
   return (
     <div className="kap max-w-3xl py-12">
       <Link href="/hesabim" className="text-sm text-soluk hover:text-vurgu">← Hesabım</Link>
-      {q.get("yeni") && <p className="mt-6 rounded-xl bg-zeytin/15 p-4 text-zeytin">Siparişiniz alındı, teşekkürler!</p>}
+      {q.get("yeni") && <p className="mt-6 bg-zeytin/15 p-4 text-zeytin">Siparişiniz alındı, teşekkürler!</p>}
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3">
         <h1 className="font-baslik text-4xl">Sipariş #{s.id}</h1>
-        <span className="rounded-full bg-kum px-4 py-1.5 text-sm">{durumAdi(s.durum, s.teslimat_yontemi)}</span>
+        <span className="bg-kum px-4 py-1.5 text-sm">{durumAdi(s.durum, s.teslimat_yontemi)}</span>
       </div>
       <p className="mt-1 text-sm text-soluk">{tarih(s.olusturulma_tarihi)}</p>
       <div className="mt-6"><Hata mesaj={hata} /></div>
 
       {bekliyor && (
-        <section className="mt-6 space-y-4 rounded-2xl border border-vurgu/30 bg-white p-6">
+        <section className="mt-6 space-y-4 border border-vurgu/30 bg-white p-6">
           <h2 className="font-baslik text-xl">Ödeme bekleniyor</h2>
           {ayarlar?.kart_odeme && (
             <form onSubmit={ode} className="flex flex-wrap gap-3">

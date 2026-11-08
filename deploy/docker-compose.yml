@@ -24,6 +24,8 @@ services:
     build: ../backend
     restart: unless-stopped
     env_file: .env
+    volumes:
+      - yuklenen:/app/yuklenen
     environment:
       DATABASE_URL: postgresql+psycopg2://paleo:${POSTGRES_PASSWORD}@db:5432/paleo_db
       # X-Forwarded-For yalnizca Caddy'den gelirse dikkate alinir
@@ -47,6 +49,7 @@ services:
     build:
       context: ../web
       args:
+        API_URL: http://app:8000
         NEXT_PUBLIC_API_URL: https://${API_ALAN_ADI:?deploy/.env icinde API_ALAN_ADI eksik}
         NEXT_PUBLIC_SITE_URL: https://${SITE_ALAN_ADI:?deploy/.env icinde SITE_ALAN_ADI eksik}
     restart: unless-stopped
@@ -96,5 +99,6 @@ networks:
 
 volumes:
   db_verisi:
+  yuklenen:
   caddy_veri:
   caddy_ayar:

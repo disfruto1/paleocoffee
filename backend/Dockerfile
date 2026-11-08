@@ -10,7 +10,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN useradd --system --no-create-home paleo
+RUN useradd --system --no-create-home paleo \
+    && mkdir -p /app/yuklenen && chown paleo /app/yuklenen
+ENV YUKLEME_KLASORU=/app/yuklenen
 USER paleo
 
 EXPOSE 8000

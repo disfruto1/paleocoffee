@@ -8,10 +8,11 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from fastapi import BackgroundTasks, FastAPI, Depends, HTTPException, Query, Request, status
+from fastapi import BackgroundTasks, FastAPI, Depends, File, HTTPException, Query, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
@@ -32,7 +33,9 @@ from schemas import (
 )
 from auth import sifreyi_hashle, giris_sifresini_dogrula, token_olustur, tokeni_coz
 import eposta
+import bildirimler
 import giris_siniri
+import gorseller
 import paytr
 import sifre_sifirlama
 import teslimat
@@ -82,6 +85,9 @@ app.add_middleware(
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="giris")
+
+# Yuklenen urun gorselleri. Site bu yolu kendi adresinden API'ye yonlendirir (web/next.config.ts)
+app.mount("/yuklenen", StaticFiles(directory=gorseller.klasor()), name="yuklenen")
 
 
 def get_db():
@@ -506,6 +512,17 @@ def urun_sil(urun_id: int, db: Session = Depends(get_db), _: Kullanici = Depends
     return {"mesaj": "Urun pasife alindi"}
 
 
+@app.post("/yonetim/gorseller", tags=["Yonetim"])
+async def gorsel_yukle(dosya: UploadFile = File(...), _: Kullanici = Depends(yonetici_gerektir)):
+    """Urun gorseli yukler; donen adres urunun gorsel_url alanina yazilir."""
+    veri = await dosya.read(gorseller.EN_BUYUK_BAYT + 1)
+    try:
+        ad = await asyncio.to_thread(gorseller.kaydet, veri)
+    except gorseller.GorselHatasi as hata:
+        raise HTTPException(status_code=400, detail=str(hata)) from hata
+    return {"url": f"/yuklenen/{ad}"}
+
+
 @app.get("/yonetim/urunler", response_model=list[UrunCevap], tags=["Yonetim"])
 def yonetim_urunleri_listele(
     q: Optional[str] = Query(None, max_length=100),
@@ -538,7 +555,12 @@ def _stok_iade_et(db: Session, siparis: Siparis):
 
 
 @app.post("/siparisler", response_model=SiparisCevap, tags=["Siparisler"])
-def siparis_olustur(veri: SiparisOlustur, db: Session = Depends(get_db), kullanici: Kullanici = Depends(aktif_kullanici_getir)):
+def siparis_olustur(
+    veri: SiparisOlustur, arka_plan: BackgroundTasks, db: Session = Depends(get_db), kullanici: Kullanici = Depends(aktif_kullanici_getir)
+):
+    odeme_bilgisi = os.getenv("ODEME_BILGISI", "").strip()
+    if veri.odeme_yontemi == "havale" and not odeme_bilgisi:
+        raise HTTPException(status_code=400, detail="Havale ile odeme su an kullanilamiyor")
     adres = veri.teslimat_adresi.strip() if veri.teslimat_adresi else None
     if veri.teslimat_yontemi in TeslimatYontemi.ADRES_GEREKEN and not adres:
         raise HTTPException(status_code=400, detail="Teslimat adresi gerekli")
@@ -587,11 +609,14 @@ def siparis_olustur(veri: SiparisOlustur, db: Session = Depends(get_db), kullani
         raise HTTPException(status_code=400, detail="Bu teslimat yontemi su an kullanilamiyor")
     siparis = Siparis(
         kullanici_id=kullanici.id, toplam_tutar=urun_tutari + ucret, teslimat_yontemi=veri.teslimat_yontemi,
-        teslimat_ucreti=ucret, teslimat_adresi=adres, siparis_notu=_bos_ise_none(veri.siparis_notu), kalemler=kalemler,
+        teslimat_ucreti=ucret, teslimat_adresi=adres, siparis_notu=_bos_ise_none(veri.siparis_notu),
+        odeme_yontemi=veri.odeme_yontemi, kalemler=kalemler,
     )
     db.add(siparis)
     db.commit()
     db.refresh(siparis)
+    if veri.odeme_yontemi == "havale":
+        arka_plan.add_task(bildirimler.gonder, bildirimler.havale_siparisi_alindi(siparis, odeme_bilgisi))
     return siparis
 
 
@@ -636,7 +661,9 @@ def siparis_iptal_et(siparis_id: int, db: Session = Depends(get_db), kullanici: 
 
 
 @app.patch("/siparisler/{siparis_id}/durum", response_model=SiparisCevap, tags=["Siparisler"])
-def siparis_durum_guncelle(siparis_id: int, veri: SiparisDurumGuncelle, db: Session = Depends(get_db), _: Kullanici = Depends(yonetici_gerektir)):
+def siparis_durum_guncelle(
+    siparis_id: int, veri: SiparisDurumGuncelle, arka_plan: BackgroundTasks, db: Session = Depends(get_db), _: Kullanici = Depends(yonetici_gerektir)
+):
     siparis = db.query(Siparis).filter(Siparis.id == siparis_id).with_for_update().first()
     if not siparis:
         raise HTTPException(status_code=404, detail="Siparis bulunamadi")
@@ -650,6 +677,12 @@ def siparis_durum_guncelle(siparis_id: int, veri: SiparisDurumGuncelle, db: Sess
     siparis.durum = veri.durum
     db.commit()
     db.refresh(siparis)
+    if veri.durum == SiparisDurum.ODENDI:
+        arka_plan.add_task(bildirimler.gonder, bildirimler.odeme_alindi(siparis))
+    elif veri.durum == SiparisDurum.KARGOYA_VERILDI:
+        arka_plan.add_task(bildirimler.gonder, bildirimler.yola_cikti(siparis))
+    elif veri.durum == SiparisDurum.IPTAL_EDILDI:
+        arka_plan.add_task(bildirimler.gonder, bildirimler.iptal_edildi(siparis, zaman_asimi=False))
     return siparis
 
 
@@ -746,7 +779,7 @@ def _bildirim_red(sebep: str, kod: int) -> PlainTextResponse:
 
 
 @app.post("/odeme/paytr/bildirim", response_class=PlainTextResponse, tags=["Odeme"])
-def paytr_bildirim(form=Depends(_form_oku), db: Session = Depends(get_db)):
+def paytr_bildirim(arka_plan: BackgroundTasks, form=Depends(_form_oku), db: Session = Depends(get_db)):
     """PayTR'in sunucudan sunucuya odeme sonucu bildirimi. Giris istemez, guven imzadan gelir."""
     ayar = paytr.ayarlar()
     if ayar is None:
@@ -784,6 +817,8 @@ def paytr_bildirim(form=Depends(_form_oku), db: Session = Depends(get_db)):
         else:
             siparis.durum = SiparisDurum.ODENDI
     db.commit()
+    if siparis.durum == SiparisDurum.ODENDI and odeme.durum == PaytrDurum.BASARILI and not odeme.inceleme_nedeni:
+        arka_plan.add_task(bildirimler.gonder, bildirimler.odeme_alindi(siparis))
     return PlainTextResponse("OK")
 
 
@@ -881,6 +916,10 @@ def suresi_dolan_odemeleri_iptal_et(db: Session) -> int:
         _stok_iade_et(db, siparis)
         db.commit()
         iptal += 1
+        try:
+            bildirimler.gonder(bildirimler.iptal_edildi(siparis, zaman_asimi=True))
+        except Exception:
+            log.exception("Iptal e-postasi hazirlanamadi (%s)", siparis_id)
     if iptal:
         log.info("Suresi dolan %d odeme iptal edildi", iptal)
     return iptal

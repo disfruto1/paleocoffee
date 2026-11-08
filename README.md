@@ -40,7 +40,9 @@ Site: http://localhost:3000 · API belgeleri: http://localhost:8000/docs. Yönet
 
 ## Nasıl çalışır
 
-**Ürünler:** Kahvelerde gramaj gibi seçenekler (250 g, 1 kg) ayrı fiyat ve stokla tutulur. "Müşteri öğütme seçsin" işaretliyse müşteri sepete eklerken öğütmeyi seçer (çekirdek, espresso, filtre, Türk kahvesi…); öğütme fiyatı ve stoğu değiştirmez, siparişte görünür. Ekipman seçeneksiz, tek fiyatlı ürün olarak girilir. Görseller şimdilik `https://` bağlantısı olarak girilir.
+**Ürünler:** Kahvelerde gramaj gibi seçenekler (250 g, 1 kg) ayrı fiyat ve stokla tutulur. "Müşteri öğütme seçsin" işaretliyse müşteri sepete eklerken öğütmeyi seçer (çekirdek, espresso, filtre, Türk kahvesi…); öğütme fiyatı ve stoğu değiştirmez, siparişte görünür. Ekipman seçeneksiz, tek fiyatlı ürün olarak girilir. Ürün fotoğrafı yönetim panelinden yüklenir: en fazla 1600 px'e küçültülür, WebP'ye çevrilir, konum gibi bilgileri silinir (`backend/gorseller.py`). Site bunları kendi adresinden `/yuklenen/...` olarak sunar.
+
+**E-postalar:** Müşteriye havale siparişinde ödeme bilgisi, ödeme alınınca, sipariş yola çıkınca (kafeden teslimde "hazır") ve yönetici iptal edince e-posta gider. `SIPARIS_BILDIRIM_EPOSTASI` doluysa kafeye de her havale siparişinde ve ödenen her siparişte, öğütme ve adres bilgisiyle bildirim gider (`backend/bildirimler.py`).
 
 **Teslimat:** Üç yöntem var: Türkiye geneli kargo, Ayvalık içi adrese teslim, kafeden teslim. Ücretler `.env`'deki `KARGO_UCRETI`, `AYVALIK_TESLIMAT_UCRETI`, `UCRETSIZ_TESLIMAT_SINIRI` ile ayarlanır; `KARGO_UCRETI` boşsa kargo kapalıdır. Ücret sipariş anında hesaplanıp siparişe yazılır.
 

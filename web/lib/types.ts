@@ -56,6 +56,7 @@ export type Siparis = {
   teslimat_ucreti: string;
   teslimat_adresi: string | null;
   siparis_notu: string | null;
+  odeme_yontemi: "kart" | "havale";
   takip_no: string | null;
   olusturulma_tarihi: string;
   kalemler: SiparisKalemi[];

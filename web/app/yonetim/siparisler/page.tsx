@@ -13,8 +13,8 @@ const GECISLER: Record<string, string[]> = {
   kargoya_verildi: ["teslim_edildi"],
 };
 
-function dugmeAdi(hedef: string, yontem: string): string {
-  if (hedef === "odendi") return "Ödendi (havale geldi)";
+function dugmeAdi(hedef: string, yontem: string, odeme: string): string {
+  if (hedef === "odendi") return odeme === "havale" ? "Havale geldi" : "Ödendi olarak işaretle";
   if (hedef === "kargoya_verildi") return yontem === "kargo" ? "Kargoya verildi" : yontem === "ayvalik" ? "Kurye yola çıktı" : "Teslime hazır";
   if (hedef === "teslim_edildi") return "Teslim edildi";
   return "İptal et";
@@ -63,6 +63,7 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
             <p className="mt-3 text-soluk">Teslimat ücreti: {fiyat(s.teslimat_ucreti)}</p>
           </div>
           <div className="space-y-2">
+            <p><span className="text-soluk">Ödeme:</span> {s.odeme_yontemi === "havale" ? "Havale / EFT" : "Kart (PayTR)"}</p>
             <p><span className="text-soluk">Adres:</span> {s.teslimat_adresi || "Kafeden teslim"}</p>
             {s.siparis_notu && <p><span className="text-soluk">Not:</span> {s.siparis_notu}</p>}
             {s.takip_no && <p><span className="text-soluk">Takip no:</span> {s.takip_no}</p>}
@@ -73,7 +74,7 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
             <div className="flex flex-wrap gap-2 pt-1">
               {(GECISLER[s.durum] || []).map((h) => (
                 <button key={h} onClick={() => durum(h)} className={h === "iptal_edildi" ? "dugme-ikincil py-2" : "dugme py-2"}>
-                  {dugmeAdi(h, s.teslimat_yontemi)}
+                  {dugmeAdi(h, s.teslimat_yontemi, s.odeme_yontemi)}
                 </button>
               ))}
             </div>

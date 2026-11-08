@@ -39,6 +39,10 @@ const MESAJLAR: Record<string, string> = {
   "Kart ile odeme su an kullanilamiyor": "Kartla ödeme şu an kullanılamıyor.",
   "Odeme baslatilamadi. Lutfen tekrar deneyin.": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
   "Metinler guncellendi, lutfen yeniden okuyun": "Metinler güncellendi, lütfen sayfayı yenileyip tekrar okuyun.",
+  "Havale ile odeme su an kullanilamiyor": "Havale ile ödeme şu an kullanılamıyor.",
+  "Gorsel en fazla 12 MB olabilir": "Görsel en fazla 12 MB olabilir.",
+  "Yalnizca JPG, PNG veya WebP yuklenebilir": "Yalnızca JPG, PNG veya WebP yüklenebilir.",
+  "Gorsel okunamadi": "Görsel okunamadı. Başka bir dosya deneyin.",
 };
 
 function mesajCevir(detay: unknown, durum: number): string {
@@ -60,7 +64,7 @@ function mesajCevir(detay: unknown, durum: number): string {
   return "Bir sorun oluştu. Lütfen tekrar deneyin.";
 }
 
-type Secenekler = { method?: string; json?: unknown; form?: Record<string, string> };
+type Secenekler = { method?: string; json?: unknown; form?: Record<string, string>; dosya?: FormData };
 
 export async function api<T>(yol: string, s: Secenekler = {}): Promise<T> {
   const basliklar: Record<string, string> = {};
@@ -72,6 +76,8 @@ export async function api<T>(yol: string, s: Secenekler = {}): Promise<T> {
     govde = JSON.stringify(s.json);
   } else if (s.form) {
     govde = new URLSearchParams(s.form);
+  } else if (s.dosya) {
+    govde = s.dosya; // tarayici Content-Type'i kendisi yazar
   }
   let cevap: Response;
   try {

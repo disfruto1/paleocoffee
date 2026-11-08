@@ -152,5 +152,8 @@ done
 [ "$(compose exec -T app id -u)" != 0 ] || basarisiz "uygulama root olarak calisiyor"
 [ "$(compose exec -T web id -u)" != 0 ] || basarisiz "web sitesi root olarak calisiyor"
 compose exec -T app sh -c 'test ! -e .env && test ! -e tests' || basarisiz "imajda olmamasi gereken dosya var"
+compose exec -T app sh -c 'touch yuklenen/.deneme && rm yuklenen/.deneme' || basarisiz "gorsel klasorune yazilamiyor"
+kod=$(curl -4 -sk -o /dev/null -w '%{http_code}' --resolve site.localhost:443:127.0.0.1 https://site.localhost/yuklenen/olmayan.webp)
+[ "$kod" = 404 ] || basarisiz "site gorselleri API'den okumuyor (kod $kod)"
 
 echo "TUM KONTROLLER GECTI"

@@ -23,6 +23,8 @@ os.environ["SECRET_KEY"] = "test-icin-uretilmis-uzun-bir-anahtar-0123456789"
 os.environ.pop("ALLOWED_ORIGINS", None)
 # Teslimat ucretli testler kendi degerini monkeypatch ile verir
 os.environ["KARGO_UCRETI"] = "0"
+os.environ["YUKLEME_KLASORU"] = str(Path(tempfile.mkdtemp()) / "yuklenen")
+os.environ.pop("SIPARIS_BILDIRIM_EPOSTASI", None)
 for _ad in ("AYVALIK_TESLIMAT_UCRETI", "UCRETSIZ_TESLIMAT_SINIRI", "SITE_ADRESI"):
     os.environ.pop(_ad, None)
 

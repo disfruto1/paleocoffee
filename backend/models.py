@@ -152,6 +152,7 @@ class Siparis(Base):
     # Magazadan teslimde bos. Adres defterinden kopyalanir, adres silinse de siparis etkilenmez
     teslimat_adresi: Mapped[str | None] = mapped_column(Text, nullable=True)
     siparis_notu: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    odeme_yontemi: Mapped[str] = mapped_column(String(10), default="kart", nullable=False)  # kart veya havale
     takip_no: Mapped[str | None] = mapped_column(String(100), nullable=True)
     olusturulma_tarihi: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     kullanici: Mapped[Kullanici] = relationship(back_populates="siparisler")

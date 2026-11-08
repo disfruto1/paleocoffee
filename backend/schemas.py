@@ -148,6 +148,7 @@ class SiparisOlustur(BaseModel):
     # Kargo ve Ayvalik ici teslimatta zorunlu, magazadan teslimde gonderilmez
     teslimat_adresi: Optional[str] = Field(default=None, min_length=10, max_length=500)
     siparis_notu: Optional[str] = Field(default=None, max_length=500)
+    odeme_yontemi: Literal["kart", "havale"] = "kart"
     kalemler: list[SiparisKalemiOlustur] = Field(min_length=1, max_length=50)
 
 
@@ -174,6 +175,7 @@ class SiparisCevap(BaseModel):
     teslimat_ucreti: Decimal
     teslimat_adresi: Optional[str]
     siparis_notu: Optional[str] = None
+    odeme_yontemi: str = "kart"
     takip_no: Optional[str] = None
     olusturulma_tarihi: datetime
     kalemler: list[SiparisKalemiCevap]

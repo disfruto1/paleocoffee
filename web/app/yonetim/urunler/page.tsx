@@ -51,9 +51,26 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
   const [f, setF] = useState<Form>(urun ? formdan(urun) : BOS);
   const [hata, setHata] = useState<string | null>(null);
   const [bekle, setBekle] = useState(false);
+  const [yukleniyor, setYukleniyor] = useState(false);
   const yaz = <K extends keyof Form>(k: K, v: Form[K]) => setF((e) => ({ ...e, [k]: v }));
   const secenekYaz = (i: number, k: keyof SecenekForm, v: string) =>
     setF((e) => ({ ...e, secenekler: e.secenekler.map((s, j) => (j === i ? { ...s, [k]: v } : s)) }));
+
+  async function gorselYukle(e: React.ChangeEvent<HTMLInputElement>) {
+    const dosya = e.target.files?.[0];
+    e.target.value = "";
+    if (!dosya) return;
+    const veri = new FormData();
+    veri.append("dosya", dosya);
+    setYukleniyor(true);
+    setHata(null);
+    try {
+      yaz("gorsel_url", (await api<{ url: string }>("/yonetim/gorseller", { dosya: veri })).url);
+    } catch (err) {
+      setHata((err as Error).message);
+    }
+    setYukleniyor(false);
+  }
 
   async function kaydet(e: React.FormEvent) {
     e.preventDefault();
@@ -107,7 +124,24 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
           </select>
         ))}
         {alan("Açıklama", <textarea rows={4} value={f.aciklama} onChange={(e) => yaz("aciklama", e.target.value)} className="girdi" />, true)}
-        {alan("Görsel bağlantısı (https://…)", <input value={f.gorsel_url} onChange={(e) => yaz("gorsel_url", e.target.value)} pattern="(https://|/).*" maxLength={500} className="girdi" />, true)}
+        <div className="sm:col-span-2">
+          <span className="mb-1 block text-sm text-soluk">Görsel</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="h-24 w-24 shrink-0 overflow-hidden bg-kum">
+              <UrunGorseli urun={{ ad: f.ad || "Ürün", gorsel_url: f.gorsel_url || null }} />
+            </div>
+            <label className="dugme-ikincil cursor-pointer">
+              {yukleniyor ? "Yükleniyor…" : f.gorsel_url ? "Değiştir" : "Fotoğraf yükle"}
+              <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={gorselYukle} disabled={yukleniyor} />
+            </label>
+            {f.gorsel_url && (
+              <button type="button" className="text-sm text-soluk underline underline-offset-4 hover:text-vurgu" onClick={() => yaz("gorsel_url", "")}>
+                Kaldır
+              </button>
+            )}
+          </div>
+          <p className="mt-2 text-xs text-soluk">JPG, PNG veya WebP, en fazla 12 MB. Kare fotoğraf en iyi görünür; otomatik küçültülür.</p>
+        </div>
       </div>
 
       <fieldset className="grid gap-4 sm:grid-cols-2">
@@ -159,7 +193,7 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
       </fieldset>
 
       <div className="flex gap-3">
-        <button className="dugme" disabled={bekle}>{bekle ? "Kaydediliyor…" : "Kaydet"}</button>
+        <button className="dugme" disabled={bekle || yukleniyor}>{bekle ? "Kaydediliyor…" : "Kaydet"}</button>
         <button type="button" className="dugme-ikincil" onClick={() => bitti(null)}>Vazgeç</button>
       </div>
     </form>

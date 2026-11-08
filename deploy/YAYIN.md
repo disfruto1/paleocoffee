@@ -32,7 +32,7 @@ chmod 600 .env
 nano .env
 ```
 
-`.env` içinde alan adları, `POSTGRES_PASSWORD`, `SECRET_KEY`, teslimat ücretleri, `SMTP_SIFRE` ve `ODEME_BILGISI` doldurulur. PayTR alanları ilk açılışta boş kalabilir, kart ödemesi kapalı başlar.
+`.env` içinde alan adları, `POSTGRES_PASSWORD`, `SECRET_KEY`, teslimat ücretleri, `SMTP_SIFRE`, `SIPARIS_BILDIRIM_EPOSTASI` (yeni siparişlerin gideceği kafe adresi) ve `ODEME_BILGISI` doldurulur. PayTR alanları ilk açılışta boş kalabilir, kart ödemesi kapalı başlar.
 
 ```bash
 docker compose up -d --build
@@ -57,12 +57,13 @@ Sunucuda `crontab -e` ile her gece 03:30 yedeği:
 30 3 * * * /home/KULLANICI/paleocoffee/deploy/yedekle.sh >> /home/KULLANICI/paleo-yedek.log 2>&1
 ```
 
-Yedekler `deploy/yedekler/` altında 14 gün kalır. **Sunucu giderse bunlar da gider:** düzenli olarak başka bir yere de kopyalayın ve en az bir kez geri yüklemeyi deneyin.
+Veritabanı ve yönetim panelinden yüklenen ürün fotoğrafları ayrı dosyalara yedeklenir, `deploy/yedekler/` altında 14 gün kalır. **Sunucu giderse bunlar da gider:** düzenli olarak başka bir yere de kopyalayın ve en az bir kez geri yüklemeyi deneyin.
 
 ## 5. E-posta kontrolü
 
 1. Resend panelinde alan adı "Verified" görünmeli.
 2. Sitede "Şifremi unuttum" deneyin; kod gelen kutusuna düşmeli, spam'e bakın.
+3. Havale ile küçük bir deneme siparişi verin: müşteriye ödeme bilgisi, `SIPARIS_BILDIRIM_EPOSTASI` adresine bildirim gelmeli. Yönetim panelinden "Havale geldi" deyince ikisine de yeni e-posta gider.
 
 ## 6. PayTR
 
@@ -85,7 +86,7 @@ Test modunda sipariş "ödendi" olur ama para alınmaz. Test siparişlerini gön
 - [ ] Sözleşmeler ve KVKK metni (`backend/yasal_metinler.py`) dolduruldu ve hukuki kontrolden geçti
 - [ ] Site ve API HTTPS ile açılıyor, HTTP adresi HTTPS'e yönleniyor
 - [ ] Sunucudan dışarıya 3000, 5432 ve 8000 portları kapalı (başka bir makineden deneyin)
-- [ ] Şifre sıfırlama e-postası geliyor
+- [ ] Şifre sıfırlama ve sipariş e-postaları geliyor (müşteriye ve kafeye)
 - [ ] Yedek alındı ve geri yüklemesi denendi
 - [ ] PayTR test ödemesi tamamlandı; gerçek satışta `PAYTR_TEST_MODU=0`
 

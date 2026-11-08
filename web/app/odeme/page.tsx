@@ -79,6 +79,7 @@ export default function Odeme() {
           teslimat_yontemi: yontem,
           teslimat_adresi: adres,
           siparis_notu: not.trim() || null,
+          odeme_yontemi: odemeTuru,
           kalemler: sepet.kalemler.map((k) => ({ urun_id: k.urun_id, secenek_id: k.secenek_id, ogutme: k.ogutme, adet: k.adet })),
         },
       });

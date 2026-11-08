@@ -15,6 +15,9 @@ Teknoloji: FastAPI + SQLAlchemy + PostgreSQL (backend), Next.js 16 + Tailwind (w
 - [x] Hesabım: siparişler, sipariş detayı, bekleyen siparişi kartla ödeme veya iptal
 - [x] Yönetim paneli: özet, stoğu azalanlar, ödeme sorunları, siparişler (durum, takip no), ürünler, kategoriler
 - [x] Arama motoru: sayfa başlıkları, sitemap, robots, ürün yapısal verisi
+- [x] Sipariş e-postaları: müşteriye sipariş alındı (havale), ödeme alındı, yola çıktı / teslime hazır, iptal; kafeye yeni sipariş bildirimi
+- [x] Yönetim panelinden fotoğraf yükleme (küçültülür, WebP'ye çevrilir, konum bilgisi silinir)
+- [x] Yeni keskin tasarım (Montag Coffee'den ilham)
 - [x] Docker + Caddy yayın kurulumu, CI (backend testleri, site derlemesi, uçtan uca yayın testi)
 
 ## Faz 2: Yayından önce
@@ -28,8 +31,6 @@ Teknoloji: FastAPI + SQLAlchemy + PostgreSQL (backend), Next.js 16 + Tailwind (w
 ## Faz 3: Sonrası
 
 - [ ] Üye olmadan sipariş (misafir ödeme)
-- [ ] Sipariş onayı ve durum değişikliği e-postaları (müşteriye ve kafeye)
-- [ ] Görsel yükleme (şimdilik bağlantı giriliyor)
 - [ ] Kupon ve kampanyalar, abonelik (her ay kahve)
 - [ ] Yönetim panelinde iade (PayTR API) ve sipariş arama
 - [ ] Alembic migration'ları (şimdilik yalnızca eksik tablolar açılışta oluşur)
@@ -42,7 +43,8 @@ Teknoloji: FastAPI + SQLAlchemy + PostgreSQL (backend), Next.js 16 + Tailwind (w
 - **Cayma hakkı:** teslimat ve iade sayfasında öğütülmüş ve ambalajı açılmış kahvede cayma hakkı olmadığı yazıyor (Mesafeli Sözleşmeler Yönetmeliği m. 15). Hukuki kontrolde doğrulanmalı.
 - **Ayvalık içi teslimat** adresin gerçekten Ayvalık'ta olup olmadığını kontrol etmez; yönetici siparişte adrese bakmalı.
 - **Oturum anahtarı tarayıcıda (localStorage) saklanıyor.** Sitede başkasının kodunu çalıştıran bir açık olursa oturum çalınabilir. Site dışarıdan script yüklemiyor; ileride httpOnly çerezli oturuma geçilebilir.
-- **Ürün görseli** yöneticinin girdiği bağlantıdan doğrudan yüklenir; görselin bulunduğu site ziyaretçi IP'lerini görür. Kendi sunucumuza yüklemeye geçilmeli.
+- **E-postalar** gönderilemezse (SMTP hatası) tekrar denenmez, yalnızca sunucu kaydına yazılır. Sipariş akışı e-postaya bağlı değildir; kafe yönetim panelini de kontrol etmeli.
+- Yüklenen fotoğraflar sunucunun diskinde durur; `yedekle.sh` bunları da yedekler, başka yere kopyalanmalı. Ürüne bağlanmayan fotoğraflar silinmez.
 - `PAYTR_TEST_MODU=1` iken para alınmaz ama sipariş "ödendi" olur. Yayında 0 olmalı.
 - Yönetici ödenmiş siparişi iptal ederse kart ücreti otomatik iade edilmez, PayTR panelinden iade gerekir.
 - Eşzamanlı sipariş testleri yalnızca PostgreSQL'de çalışır, CI'da atlanıyor.

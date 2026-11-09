@@ -15,11 +15,7 @@ function Bolumler({ bolumler }: { bolumler: MenuBolumu[] }) {
           <ul className="mt-4 space-y-4">
             {b.urunler.map((u) => (
               <li key={u.ad}>
-                <div className="flex items-baseline gap-2">
-                  <span className="font-medium">{u.ad}</span>
-                  <span className="flex-1 border-b border-dotted border-cizgi" />
-                  <span className="tabular-nums">{u.fiyat} ₺</span>
-                </div>
+                <p className="font-medium">{u.ad}</p>
                 {u.aciklama && <p className="mt-0.5 text-sm text-soluk">{u.aciklama}</p>}
                 {u.ek && <p className="etiket mt-1 text-vurgu">{u.ek}</p>}
               </li>
@@ -35,7 +31,7 @@ export default function Menu() {
   return (
     <div className="kap py-16">
       <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Menü</h1>
-      <p className="mt-3 text-soluk">Kafemizde geçerlidir. Fiyatlara KDV dahildir.</p>
+      <p className="mt-3 text-soluk">Kafemizde geçerlidir. Güncel fiyatları kafemizde bulabilirsiniz.</p>
       <nav className="mt-6 flex gap-2">
         <a href="#yiyecek" className="dugme-ikincil py-2">Yiyecek</a>
         <a href="#icecek" className="dugme-ikincil py-2">İçecek</a>

@@ -119,7 +119,7 @@ export function SiparisDetay({ id, misafirKodu, telefon: ilkTelefon = "", yeni, 
       <section className="mt-8 grid gap-6 text-sm sm:grid-cols-2">
         <div>
           <h2 className="etiket mb-2 text-soluk">Teslimat</h2>
-          <p>{s.teslimat_adresi || "Kafeden teslim alınacak"}</p>
+          <p>{s.teslimat_adresi || "Dükkândan teslim alınacak"}</p>
           {s.takip_no && <p className="mt-2">Kargo takip no: <strong>{s.takip_no}</strong></p>}
         </div>
         {s.siparis_notu && (

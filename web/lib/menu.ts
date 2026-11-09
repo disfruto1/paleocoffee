@@ -106,7 +106,7 @@ export const ICECEK: MenuBolumu[] = [
   {
     baslik: "Çaylar",
     urunler: [
-      { ad: "Mayıs çayı", aciklama: "Mayıs'ta hasat edilen siyah çay, poşet olarak servis edilir" },
+      { ad: "Mayıs çayı", aciklama: "Mayıs'ta hasat edilen siyah çay; bardakta, poşet çay olarak servis edilir" },
       { ad: "Milk oolong", aciklama: "Doğal süt kremasına benzer tat" },
       { ad: "Berry punch", aciklama: "Böğürtlen, çilek, gül yaprağı, hibiskus, portakal kurusu" },
       { ad: "Chill cold brew", aciklama: "Yeşil çay, elma kurusu, doğal aromalar" },

@@ -27,7 +27,7 @@ export default async function AnaSayfa() {
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link href="/magaza" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Kahveleri keşfet</Link>
-            <Link href="/iletisim" className="dugme-ikincil hover:text-vurgu">Kafeye uğra</Link>
+            <Link href="/iletisim" className="dugme-ikincil hover:text-vurgu">Dükkâna uğra</Link>
           </div>
         </div>
         <div
@@ -74,9 +74,9 @@ export default async function AnaSayfa() {
       <section className="kap mt-px">
         <div className="grid gap-px border border-t-0 border-murekkep bg-murekkep md:grid-cols-3">
         {[
-          ["01", "Seçilmiş çekirdekler", "Güvendiğimiz kavurmacılardan seçtiğimiz nitelikli kahveler; önce kafede deniyor, sonra rafımıza alıyoruz."],
+          ["01", "Seçilmiş çekirdekler", "Güvendiğimiz kavurmacılardan seçtiğimiz nitelikli kahveler; önce dükkânda deniyor, sonra rafımıza alıyoruz."],
           ["02", "İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
-          ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da kafeden teslim al."],
+          ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da dükkândan teslim al."],
         ].map(([no, b, m]) => (
           <div key={no} className="bg-zemin p-8 md:p-10">
             <p className="etiket text-vurgu">{no}</p>
@@ -92,10 +92,10 @@ export default async function AnaSayfa() {
           className="min-h-80 bg-cover bg-center"
           style={{ backgroundImage: "url(/gorseller/kafe.jpg), linear-gradient(135deg, #6b7a45, #2f3820)" }}
           role="img"
-          aria-label="Paleo Coffee kafe"
+          aria-label="Paleo Coffee dükkânı"
         />
         <div className="bg-murekkep p-10 text-zemin md:p-14">
-          <p className="etiket text-zemin/60">Kafemiz</p>
+          <p className="etiket text-zemin/60">Dükkânımız</p>
           <h2 className="font-baslik mt-4 text-5xl leading-[1.1] md:text-6xl">Ayvalık&apos;ta bir mola</h2>
           <p className="mt-6 text-zemin/75">
             Güne kahvaltıyla başla, öğlen bir bagel sandviçle devam et. Espresso bazlı içecekler ve filtre kahveler gün boyu; sorularını baristamıza sor.

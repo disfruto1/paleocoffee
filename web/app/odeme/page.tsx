@@ -233,7 +233,7 @@ export default function Odeme() {
         <section>
           <label className="block">
             <span className="mb-1 block text-sm">Sipariş notu <span className="text-soluk">(isteğe bağlı)</span></span>
-            <textarea value={not} onChange={(e) => setNot(e.target.value)} rows={2} maxLength={500} className="girdi" placeholder="Örn. kafeden cumartesi alacağım" />
+            <textarea value={not} onChange={(e) => setNot(e.target.value)} rows={2} maxLength={500} className="girdi" placeholder="Örn. dükkândan cumartesi alacağım" />
           </label>
         </section>
       </div>

@@ -100,7 +100,7 @@ def test_magazadan_teslimde_hazir_epostasi(client, yonetici, musteri, gidenler):
     client.patch(f"/siparisler/{s['id']}/durum", json={"durum": "odendi"}, headers=yonetici)
     gidenler.clear()
     client.patch(f"/siparisler/{s['id']}/durum", json={"durum": "kargoya_verildi"}, headers=yonetici)
-    assert "hazır" in gidenler[0][1] and "kafemizden" in gidenler[0][2]
+    assert "hazır" in gidenler[0][1] and "dükkânımızdan" in gidenler[0][2]
 
 
 def test_kayit_olan_musteriye_de_gider(client, yonetici, gidenler):

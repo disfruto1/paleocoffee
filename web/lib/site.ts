@@ -2,7 +2,7 @@
 // Saatler kis saatleridir; yazin degisecek.
 export const SITE = {
   ad: "Paleo Coffee",
-  tamAd: "Paleo Coffee Ayvalık",
+  tamAd: "Paleo Coffee & More",
   slogan: "Carefully sourced, better together · Est. 2021",
   adres: "Zekibey Mah. 13 Nisan Cad. 33003 Sk. No:1/A, Ayvalık / Balıkesir",
   haritaAdresi: "https://www.google.com/maps/search/?api=1&query=Paleo+Coffee+Ayval%C4%B1k",

@@ -13,7 +13,7 @@ from models import Siparis, TeslimatYontemi
 TESLIMAT = {
     TeslimatYontemi.KARGO: "Kargo",
     TeslimatYontemi.AYVALIK: "Ayvalık içi teslimat",
-    TeslimatYontemi.MAGAZADAN: "Kafeden teslim",
+    TeslimatYontemi.MAGAZADAN: "Dükkândan teslim",
 }
 
 
@@ -49,7 +49,7 @@ def _ozet(s: Siparis) -> str:
     satirlar.append(f"- {TESLIMAT.get(s.teslimat_yontemi, 'Teslimat')}: {_tl(s.teslimat_ucreti)}")
     satirlar.append(f"Toplam: {_tl(s.toplam_tutar)}")
     satirlar.append("")
-    satirlar.append(f"Teslimat: {s.teslimat_adresi or 'Kafeden teslim alınacak'}")
+    satirlar.append(f"Teslimat: {s.teslimat_adresi or 'Dükkândan teslim alınacak'}")
     if s.siparis_notu:
         satirlar.append(f"Not: {s.siparis_notu}")
     return "\n".join(satirlar)
@@ -97,7 +97,7 @@ def odeme_alindi(s: Siparis) -> list[Eposta]:
 
 def yola_cikti(s: Siparis) -> list[Eposta]:
     if s.teslimat_yontemi == TeslimatYontemi.MAGAZADAN:
-        konu, govde = "Siparişiniz hazır", "siparişiniz hazır. Çalışma saatlerimizde kafemizden teslim alabilirsiniz."
+        konu, govde = "Siparişiniz hazır", "siparişiniz hazır. Çalışma saatlerimizde dükkânımızdan teslim alabilirsiniz."
     elif s.teslimat_yontemi == TeslimatYontemi.AYVALIK:
         konu, govde = "Siparişiniz yolda", "siparişiniz yola çıktı, kısa süre içinde adresinizde olacak."
     else:

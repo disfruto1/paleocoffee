@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" 
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.tamAd} | Kahvaltı ve üçüncü nesil kahve`, template: `%s | ${SITE.tamAd}` },
+  title: { default: `${SITE.tamAd} | Ayvalık'ta kahvaltı ve üçüncü nesil kahve`, template: `%s | ${SITE.tamAd} Ayvalık` },
   description: "Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Çekirdek ve öğütülmüş nitelikli kahve, demleme ekipmanları; Türkiye geneline kargo, Ayvalık içi teslimat.",
   openGraph: { siteName: SITE.tamAd, locale: "tr_TR", type: "website" },
 };

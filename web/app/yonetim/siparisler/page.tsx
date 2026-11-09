@@ -69,7 +69,7 @@ function SiparisSatiri({ s, acik, degisti }: { s: Siparis; acik: boolean; degist
               {s.musteri_telefon && <> · <a href={`tel:${s.musteri_telefon.replace(/[^0-9+]/g, "")}`} className="underline">{s.musteri_telefon}</a></>}
             </p>
             <p><span className="text-soluk">Ödeme:</span> {s.odeme_yontemi === "havale" ? "Havale / EFT" : "Kart (PayTR)"}</p>
-            <p><span className="text-soluk">Adres:</span> {s.teslimat_adresi || "Kafeden teslim"}</p>
+            <p><span className="text-soluk">Adres:</span> {s.teslimat_adresi || "Dükkândan teslim"}</p>
             {s.siparis_notu && <p><span className="text-soluk">Not:</span> {s.siparis_notu}</p>}
             {s.takip_no && <p><span className="text-soluk">Takip no:</span> {s.takip_no}</p>}
             <Hata mesaj={hata} />

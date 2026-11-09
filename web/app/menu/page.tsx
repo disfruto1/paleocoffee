@@ -31,7 +31,7 @@ export default function Menu() {
   return (
     <div className="kap py-16">
       <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Menü</h1>
-      <p className="mt-3 text-soluk">Kafemizde geçerlidir. Güncel fiyatları kafemizde bulabilirsiniz.</p>
+      <p className="mt-3 text-soluk">Dükkânımızda geçerlidir. Güncel fiyatları dükkânımızda bulabilirsiniz.</p>
       <nav className="mt-6 flex gap-2">
         <a href="#yiyecek" className="dugme-ikincil py-2">Yiyecek</a>
         <a href="#icecek" className="dugme-ikincil py-2">İçecek</a>

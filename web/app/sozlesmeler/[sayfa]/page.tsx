@@ -16,7 +16,7 @@ const SAYFALAR: Record<string, { baslik: string; govde: React.ReactNode }> = {
         <ul>
           <li><strong>Kargo (Türkiye geneli):</strong> Siparişler ödeme onayından sonra [1–2] iş günü içinde kargoya verilir. Kargo takip numarası Hesabım sayfasında görünür.</li>
           <li><strong>Ayvalık içi teslimat:</strong> Ayvalık merkez ve [Cunda, Sarımsaklı …] adreslerine kuryeyle teslim edilir. [Saat …]&apos;e kadar verilen siparişler aynı gün teslim edilir.</li>
-          <li><strong>Kafeden teslim:</strong> Siparişiniz hazır olduğunda Hesabım sayfasında &quot;Teslime hazır&quot; görünür. Çalışma saatlerimizde kafemizden alabilirsiniz.</li>
+          <li><strong>Dükkândan teslim:</strong> Siparişiniz hazır olduğunda Hesabım sayfasında &quot;Teslime hazır&quot; görünür. Çalışma saatlerimizde dükkânımızdan alabilirsiniz.</li>
         </ul>
         <p>Teslimat ücreti sepette ve ödeme adımında gösterilir.</p>
         <h2>Cayma hakkı ve iade</h2>
@@ -38,7 +38,7 @@ const SAYFALAR: Record<string, { baslik: string; govde: React.ReactNode }> = {
         <h2>3. Ürün, fiyat ve ödeme</h2>
         <p>Ürünlerin adı, miktarı, KDV dahil satış fiyatı, teslimat ücreti ve ödeme şekli sipariş özetinde ve sipariş onayında yer alır. Kartla ödemeler PayTR güvenli ödeme altyapısıyla alınır; kart bilgileri satıcı tarafından saklanmaz.</p>
         <h2>4. Teslimat</h2>
-        <p>Ürünler alıcının seçtiği yöntemle (kargo, Ayvalık içi teslimat veya kafeden teslim) en geç 30 gün içinde teslim edilir.</p>
+        <p>Ürünler alıcının seçtiği yöntemle (kargo, Ayvalık içi teslimat veya dükkândan teslim) en geç 30 gün içinde teslim edilir.</p>
         <h2>5. Cayma hakkı</h2>
         <p>Cayma hakkı ve istisnaları &quot;Teslimat ve iade&quot; sayfasında açıklanmıştır.</p>
         <h2>6. Uyuşmazlıklar</h2>

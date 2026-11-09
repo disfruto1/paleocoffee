@@ -43,7 +43,7 @@ export const DURUMLAR: Record<string, string> = {
   iptal_edildi: "İptal edildi",
 };
 
-/** Teslimat yontemine gore durum adi: kafeden teslimde "yola cikti" yerine "teslime hazir". */
+/** Teslimat yontemine gore durum adi: dükkândan teslimde "yola cikti" yerine "teslime hazir". */
 export function durumAdi(durum: string, yontem: string): string {
   if (durum === "kargoya_verildi") {
     if (yontem === "magazadan") return "Teslime hazır";
@@ -55,7 +55,7 @@ export function durumAdi(durum: string, yontem: string): string {
 export const TESLIMAT_ADLARI: Record<string, string> = {
   kargo: "Kargo",
   ayvalik: "Ayvalık içi teslimat",
-  magazadan: "Kafeden teslim",
+  magazadan: "Dükkândan teslim",
 };
 
 export function tarih(t: string): string {

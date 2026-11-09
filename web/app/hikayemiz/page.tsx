@@ -18,10 +18,10 @@ export default function Hikayemiz() {
         </p>
         <h2>Kahvelerimiz</h2>
         <p>
-          Kahvelerimizi kendimiz kavurmuyoruz; güvendiğimiz kavurmacıların farklı bölgelerden getirdiği çekirdekleri seçiyoruz. Her birini önce kafede, farklı yöntemlerle demleyip deniyor; beğendiklerimizi rafımıza ve bu siteye alıyoruz.
+          Kahvelerimizi kendimiz kavurmuyoruz; güvendiğimiz kavurmacıların farklı bölgelerden getirdiği çekirdekleri seçiyoruz. Her birini önce dükkânda, farklı yöntemlerle demleyip deniyor; beğendiklerimizi rafımıza ve bu siteye alıyoruz.
         </p>
-        <h2>Kafemize bekleriz</h2>
-        <p>Yeni kahvelerimizi ilk kafede deniyoruz. Uğrayın, birlikte tadalım.</p>
+        <h2>Dükkânımıza bekleriz</h2>
+        <p>Yeni kahvelerimizi ilk dükkânda deniyoruz. Uğrayın, birlikte tadalım.</p>
       </div>
       <div className="mt-10 flex flex-wrap gap-3">
         <Link href="/magaza" className="dugme">Kahvelerimiz</Link>

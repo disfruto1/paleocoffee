@@ -62,7 +62,7 @@ export default async function UrunSayfasi({ params }: Parametre) {
             <SepeteEkle urun={urun} ogutmeler={ayarlar?.ogutme_secenekleri || []} tukendi={stoktaYok(urun)} />
           </div>
           <p className="mt-6 text-sm text-soluk">
-            Türkiye geneline kargo · Ayvalık içi teslimat · Kafeden teslim
+            Türkiye geneline kargo · Ayvalık içi teslimat · Dükkândan teslim
             {ayarlar?.ucretsiz_teslimat_siniri && ` · ${Number(ayarlar.ucretsiz_teslimat_siniri).toLocaleString("tr-TR")} TL üzeri ücretsiz teslimat`}
           </p>
           <script

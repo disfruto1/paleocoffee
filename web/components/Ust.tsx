@@ -25,8 +25,9 @@ export function Ust() {
       </p>
       <div className="border-b border-murekkep bg-zemin">
         <div className="kap flex h-16 items-center justify-between gap-6">
-          <Link href="/" className="font-baslik text-2xl font-semibold tracking-wide" onClick={() => setAcik(false)}>
-            Paleo<span className="text-vurgu">.</span>
+          <Link href="/" className="shrink-0" onClick={() => setAcik(false)} aria-label="Paleo Coffee & More, ana sayfa">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/marka/logo.png" alt="Paleo Coffee & More" width={400} height={179} className="h-10 w-auto" />
           </Link>
           <nav className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.12em] md:flex">
             {BAGLANTILAR.map((b) => (

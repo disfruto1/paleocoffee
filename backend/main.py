@@ -814,7 +814,7 @@ def _odeme_baslat(db: Session, request: Request, siparis_id: int, telefon: Optio
     if siparis.teslimat_ucreti > 0:
         satirlar.append((teslimat.ADLAR.get(siparis.teslimat_yontemi, "Teslimat"), siparis.teslimat_ucreti, 1))
     sepet = paytr.sepet_kodla(satirlar)
-    ad, adres = siparis.musteri_ad, siparis.teslimat_adresi or "Kafeden teslim: Ayvalık"
+    ad, adres = siparis.musteri_ad, siparis.teslimat_adresi or "Dükkândan teslim: Ayvalık"
     if siparis.kullanici:
         siparis.kullanici.telefon = telefon
     else:

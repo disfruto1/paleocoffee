@@ -13,7 +13,7 @@ log = logging.getLogger("paleo.teslimat")
 ADLAR = {
     TeslimatYontemi.KARGO: "Kargo (Türkiye geneli)",
     TeslimatYontemi.AYVALIK: "Ayvalık içi adrese teslim",
-    TeslimatYontemi.MAGAZADAN: "Kafeden teslim al",
+    TeslimatYontemi.MAGAZADAN: "Dükkândan teslim al",
 }
 
 

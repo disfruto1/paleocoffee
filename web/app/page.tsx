@@ -14,7 +14,7 @@ export default async function AnaSayfa() {
     <>
       <section className="grid min-h-[calc(100svh-6.5rem)] bg-murekkep text-zemin lg:grid-cols-2">
         <div className="kap flex flex-col justify-end py-14 lg:mx-0 lg:max-w-none lg:px-12 lg:py-20">
-          <p className="etiket text-zemin/60">Ayvalık · Kahvaltı · Üçüncü nesil kahve</p>
+          <p className="etiket text-zemin/60">Est. 2021 · Ayvalık · Kahvaltı · Üçüncü nesil kahve</p>
           <h1 className="font-baslik mt-6 text-[clamp(3.5rem,9vw,8rem)] leading-[1.1] font-semibold">
             Kahvenin
             <br />

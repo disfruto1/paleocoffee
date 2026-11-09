@@ -1,75 +1,53 @@
 import type { Metadata } from "next";
+import { ICECEK, ICECEK_EKLERI, type MenuBolumu, YIYECEK, YIYECEK_NOTU } from "@/lib/menu";
 
-export const metadata: Metadata = { title: "Menü", description: "Paleo Coffee Ayvalık menüsü: kahvaltı, bagel sandviçler, espresso bazlı içecekler ve demleme kahveler." };
+export const metadata: Metadata = {
+  title: "Menü",
+  description: "Paleo Coffee Ayvalık menüsü: kahvaltı, bagel ve kruvasan sandviçler, bowl'lar, espresso bazlı içecekler, brew bar ve çaylar.",
+};
 
-// [TASLAK] Urunler ve fiyatlar kafenin gercek menusuyle degistirilmeli. Bu menu siteden satilmaz, kafede gecerlidir.
-const MENU: { baslik: string; not?: string; urunler: [string, string, string?][] }[] = [
-  {
-    baslik: "Kahvaltı",
-    urunler: [
-      ["[Kahvaltı tabağı]", "[00] ₺", "[içerik]"],
-      ["[Kahvaltılık]", "[00] ₺", "[içerik]"],
-      ["[Kahvaltılık]", "[00] ₺", "[içerik]"],
-    ],
-  },
-  {
-    baslik: "Bagel sandviçler",
-    urunler: [
-      ["[Bagel adı]", "[00] ₺", "[içerik]"],
-      ["[Bagel adı]", "[00] ₺", "[içerik]"],
-      ["[Bagel adı]", "[00] ₺", "[içerik]"],
-    ],
-  },
-  {
-    baslik: "Espresso bazlı",
-    urunler: [
-      ["Espresso", "[00] ₺"],
-      ["Americano", "[00] ₺"],
-      ["Cortado", "[00] ₺"],
-      ["Flat white", "[00] ₺"],
-      ["Latte", "[00] ₺", "Bitkisel sütle de hazırlanır"],
-      ["Cappuccino", "[00] ₺"],
-    ],
-  },
-  {
-    baslik: "Demleme ve soğuk",
-    urunler: [
-      ["V60", "[00] ₺", "Günün çekirdeğiyle"],
-      ["Chemex (2 kişilik)", "[00] ₺"],
-      ["Türk kahvesi", "[00] ₺"],
-      ["Cold brew", "[00] ₺"],
-      ["Iced latte", "[00] ₺"],
-    ],
-  },
-];
+function Bolumler({ bolumler }: { bolumler: MenuBolumu[] }) {
+  return (
+    <div className="grid gap-x-16 gap-y-12 md:grid-cols-2">
+      {bolumler.map((b) => (
+        <section key={b.baslik} className="break-inside-avoid">
+          <h3 className="font-baslik border-b border-murekkep pb-2 text-2xl">{b.baslik}</h3>
+          <ul className="mt-4 space-y-4">
+            {b.urunler.map((u) => (
+              <li key={u.ad}>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-medium">{u.ad}</span>
+                  <span className="flex-1 border-b border-dotted border-cizgi" />
+                  <span className="tabular-nums">{u.fiyat} ₺</span>
+                </div>
+                {u.aciklama && <p className="mt-0.5 text-sm text-soluk">{u.aciklama}</p>}
+                {u.ek && <p className="etiket mt-1 text-vurgu">{u.ek}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
 
 export default function Menu() {
   return (
-    <div className="kap max-w-4xl py-16">
+    <div className="kap py-16">
       <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Menü</h1>
       <p className="mt-3 text-soluk">Kafemizde geçerlidir. Fiyatlara KDV dahildir.</p>
-      <div className="mt-12 grid gap-12 md:grid-cols-2">
-        {MENU.map((b) => (
-          <section key={b.baslik}>
-            <h2 className="flex items-baseline justify-between border-b border-murekkep pb-2 font-baslik text-2xl">
-              {b.baslik}
-              {b.not && <span className="etiket font-sans text-soluk">{b.not}</span>}
-            </h2>
-            <ul className="mt-4 space-y-4">
-              {b.urunler.map(([ad, f, not], i) => (
-                <li key={i}>
-                  <div className="flex items-baseline gap-2">
-                    <span>{ad}</span>
-                    <span className="flex-1 border-b border-dotted border-cizgi" />
-                    <span className="tabular-nums">{f}</span>
-                  </div>
-                  {not && <p className="text-sm text-soluk">{not}</p>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
+      <nav className="mt-6 flex gap-2">
+        <a href="#yiyecek" className="dugme-ikincil py-2">Yiyecek</a>
+        <a href="#icecek" className="dugme-ikincil py-2">İçecek</a>
+      </nav>
+
+      <h2 id="yiyecek" className="font-baslik mt-16 scroll-mt-32 text-4xl font-semibold text-vurgu md:text-5xl">Yiyecek</h2>
+      <div className="mt-8"><Bolumler bolumler={YIYECEK} /></div>
+      <p className="etiket mt-10 text-soluk">{YIYECEK_NOTU}</p>
+
+      <h2 id="icecek" className="font-baslik mt-20 scroll-mt-32 text-4xl font-semibold text-vurgu md:text-5xl">İçecek</h2>
+      <div className="mt-8"><Bolumler bolumler={ICECEK} /></div>
+      <p className="etiket mt-10 text-soluk">{ICECEK_EKLERI}</p>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default async function AnaSayfa() {
     <>
       <section className="grid min-h-[calc(100svh-6.5rem)] bg-murekkep text-zemin lg:grid-cols-2">
         <div className="kap flex flex-col justify-end py-14 lg:mx-0 lg:max-w-none lg:px-12 lg:py-20">
-          <p className="etiket text-zemin/60">Ayvalık · Nitelikli kahve · Kavurma evi</p>
+          <p className="etiket text-zemin/60">Ayvalık · Kahvaltı · Üçüncü nesil kahve</p>
           <h1 className="font-baslik mt-6 text-[clamp(3.5rem,9vw,8rem)] leading-[1.1] font-semibold">
             Kahvenin
             <br />
@@ -23,7 +23,7 @@ export default async function AnaSayfa() {
             <span className="text-vurgu">hâli.</span>
           </h1>
           <p className="mt-8 max-w-md text-lg text-zemin/70">
-            Küçük partiler halinde kavrulmuş tek köken kahveler, demleme ekipmanları ve Ayvalık&apos;ın taş sokaklarında bir fincan sakinlik.
+            Ayvalık&apos;ın taş sokaklarında kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Evde demlemek için seçtiğimiz çekirdekler ve ekipmanlar da burada.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link href="/magaza" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Kahveleri keşfet</Link>
@@ -53,7 +53,7 @@ export default async function AnaSayfa() {
       {urunler.length > 0 && (
         <section className="kap py-20">
           <div className="mb-10 flex items-end justify-between gap-4 border-b border-murekkep pb-4">
-            <h2 className="font-baslik text-4xl md:text-6xl">Bu hafta kavrulanlar</h2>
+            <h2 className="font-baslik text-4xl md:text-6xl">Öne çıkan kahveler</h2>
             <Link href="/magaza" className="etiket shrink-0 hover:text-vurgu">Tümünü gör →</Link>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-4">
@@ -66,7 +66,7 @@ export default async function AnaSayfa() {
         <div className="kap py-24 text-center">
           <p className="etiket text-soluk">Neden Paleo</p>
           <p className="font-baslik mx-auto mt-6 max-w-5xl text-[clamp(2.25rem,5.5vw,4.5rem)] leading-[1.08] font-semibold">
-            İyi kahvenin sırrı karmaşık tariflerde değil; doğru çekirdekte, <span className="text-vurgu">özenli kavrumda</span>, sabırlı demlemede.
+            İyi bir sabahın sırrı karmaşık tariflerde değil; doğru çekirdekte, <span className="text-vurgu">özenli demlemede</span>, sıcak bir kahvaltıda.
           </p>
         </div>
       </section>
@@ -74,7 +74,7 @@ export default async function AnaSayfa() {
       <section className="kap mt-px">
         <div className="grid gap-px border border-t-0 border-murekkep bg-murekkep md:grid-cols-3">
         {[
-          ["01", "Taze kavrum", "Her hafta küçük partiler halinde kavrulur, paketin üzerinde kavrum tarihiyle gönderilir."],
+          ["01", "Seçilmiş çekirdekler", "Güvendiğimiz kavurmacılardan seçtiğimiz nitelikli kahveler; önce kafede deniyor, sonra rafımıza alıyoruz."],
           ["02", "İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
           ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da kafeden teslim al."],
         ].map(([no, b, m]) => (
@@ -98,7 +98,7 @@ export default async function AnaSayfa() {
           <p className="etiket text-zemin/60">Kafemiz</p>
           <h2 className="font-baslik mt-4 text-5xl leading-[1.1] md:text-6xl">Ayvalık&apos;ta bir mola</h2>
           <p className="mt-6 text-zemin/75">
-            Espresso bazlı içecekler, filtre kahveler ve ev yapımı tatlılar. Çekirdeğini seç, nasıl demlendiğini izle; sorularını baristamıza sor.
+            Güne kahvaltıyla başla, öğlen bir bagel sandviçle devam et. Espresso bazlı içecekler ve filtre kahveler gün boyu; sorularını baristamıza sor.
           </p>
           <dl className="mt-8 border-t border-zemin/20 text-sm">
             <div className="flex justify-between gap-4 border-b border-zemin/20 py-3">

@@ -21,7 +21,7 @@ export function Ust() {
   return (
     <header className="sticky top-0 z-30">
       <p className="etiket bg-murekkep py-2 text-center text-zemin/80">
-        Ayvalık içi aynı gün teslimat · Türkiye geneline kargo · Taze kavrum
+        Ayvalık içi aynı gün teslimat · Türkiye geneline kargo · Salı hariç her gün 08:30–18:00
       </p>
       <div className="border-b border-murekkep bg-zemin">
         <div className="kap flex h-16 items-center justify-between gap-6">

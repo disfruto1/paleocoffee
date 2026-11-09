@@ -11,7 +11,7 @@ export default function SepetSayfasi() {
     return (
       <div className="kap py-28 text-center">
         <h1 className="font-baslik text-4xl">Sepetiniz boş</h1>
-        <p className="mt-3 text-soluk">Taze kavrulmuş kahvelerimize göz atın.</p>
+        <p className="mt-3 text-soluk">Kahvelerimize ve demleme ekipmanlarına göz atın.</p>
         <Link href="/magaza" className="dugme mt-8">Mağazaya git</Link>
       </div>
     );

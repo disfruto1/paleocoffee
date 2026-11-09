@@ -1,15 +1,19 @@
-// Kafenin bilgileri. Adres, telefon ve saatler Google Haritalar kaydini yansitan kafe rehberlerinden
-// derlendi (Kasim 2026); kaynaklar saatlerde farkli. Kafeyle dogrulanmali. Bos alanlar sitede gosterilmez.
+// Kafenin bilgileri (kafeden alindi, Kasim 2026). Bos alanlar sitede gosterilmez.
+// Saatler kis saatleridir; yazin degisecek.
 export const SITE = {
   ad: "Paleo Coffee",
   tamAd: "Paleo Coffee Ayvalık",
-  slogan: "Ayvalık'ta özenle kavrulmuş nitelikli kahve",
-  adres: "Zekibey Mah. 13 Nisan Cad. No:51, Ayvalık / Balıkesir",
-  haritaAdresi: "https://www.google.com/maps/search/?api=1&query=Paleo+Coffee+13+Nisan+Cad.+51+Ayval%C4%B1k",
-  telefon: "0530 265 91 03",
+  slogan: "Ayvalık'ta kahvaltı ve üçüncü nesil kahve",
+  adres: "Zekibey Mah. 13 Nisan Cad. 33003 Sk. No:1/A, Ayvalık / Balıkesir",
+  haritaAdresi: "https://www.google.com/maps/search/?api=1&query=Paleo+Coffee+Ayval%C4%B1k",
+  telefon: "0543 651 42 96",
   eposta: "", // [doldurulacak] site alan adindaki adres, ornek: merhaba@paleocoffee.com.tr
-  instagram: "", // [doldurulacak] ornek: https://www.instagram.com/kullanici-adi
-  saatler: [{ gun: "Her gün", saat: "09:00 – 18:00" }],
-  telefonBaglantisi: "tel:+905302659103",
+  instagram: "https://www.instagram.com/paleocoffeeayvalik",
+  instagramAdi: "@paleocoffeeayvalik",
+  saatler: [
+    { gun: "Salı hariç her gün", saat: "08:30 – 18:00" },
+    { gun: "Salı", saat: "Kapalı" },
+  ],
+  telefonBaglantisi: "tel:+905436514296",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
 };

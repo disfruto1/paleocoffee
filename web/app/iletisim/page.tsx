@@ -25,6 +25,7 @@ export default function Iletisim() {
               </div>
             ))}
           </dl>
+          <p className="mt-3 text-sm text-soluk">Kış saatleridir, yazın değişir.</p>
         </section>
         <section>
           <h2 className="font-baslik text-xl">Bize ulaşın</h2>
@@ -32,17 +33,11 @@ export default function Iletisim() {
           {SITE.eposta && <a href={`mailto:${SITE.eposta}`} className="block text-soluk hover:text-vurgu">{SITE.eposta}</a>}
           {SITE.instagram && (
             <a href={SITE.instagram} target="_blank" rel="noopener" className="mt-2 inline-block underline underline-offset-4 hover:text-vurgu">
-              Instagram
+              {SITE.instagramAdi}
             </a>
           )}
         </section>
       </div>
-      <section className="mt-16 bg-kum p-8 md:p-10">
-        <h2 className="font-baslik text-2xl">Toptan ve kafe işbirlikleri</h2>
-        <p className="mt-2 max-w-2xl text-soluk">
-          İşletmeniz için düzenli kahve tedariki veya ekipman danışmanlığı istiyorsanız bize ulaşın, size özel teklif hazırlayalım.
-        </p>
-      </section>
     </div>
   );
 }

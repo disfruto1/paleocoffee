@@ -12,8 +12,8 @@ const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" 
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.tamAd} | Nitelikli kahve ve kavurma`, template: `%s | ${SITE.tamAd}` },
-  description: "Ayvalık'ta nitelikli kahve. Taze kavrulmuş çekirdek ve öğütülmüş kahve, demleme ekipmanları. Türkiye geneline kargo, Ayvalık içi teslimat.",
+  title: { default: `${SITE.tamAd} | Kahvaltı ve üçüncü nesil kahve`, template: `%s | ${SITE.tamAd}` },
+  description: "Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Çekirdek ve öğütülmüş nitelikli kahve, demleme ekipmanları; Türkiye geneline kargo, Ayvalık içi teslimat.",
   openGraph: { siteName: SITE.tamAd, locale: "tr_TR", type: "website" },
 };
 

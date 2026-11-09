@@ -1,31 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Hikâyemiz", description: "Paleo Coffee'nin Ayvalık'taki hikâyesi." };
+export const metadata: Metadata = { title: "Hikâyemiz", description: "Paleo Coffee: Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve." };
 
-// [TASLAK] Metin kafenin kendi hikâyesiyle degistirilmeli
+// [TASLAK] Kafenin kendi anlatimiyla guncellenebilir
 export default function Hikayemiz() {
   return (
     <div className="kap max-w-3xl py-16">
-      <p className="text-sm uppercase tracking-[0.2em] text-soluk">Hikâyemiz</p>
-      <h1 className="mt-3 font-baslik text-4xl leading-tight md:text-5xl">Özüne dönen bir kahve</h1>
+      <p className="etiket text-soluk">Hikâyemiz</p>
+      <h1 className="font-baslik mt-3 text-5xl leading-[1.1] font-semibold md:text-6xl">Özüne dönen bir kahve dükkânı</h1>
       <div className="metin mt-8 text-lg">
         <p>
-          &quot;Paleo&quot; eski, köklere ait olan demek. Biz de kahveye böyle bakıyoruz: iyi bir fincanın sırrı karmaşık tariflerde değil, doğru çekirdekte, özenli bir kavrumda ve sabırlı bir demlemede.
+          &quot;Paleo&quot; eski, köklere ait olan demek. Biz de kahveye ve sofraya böyle bakıyoruz: iyi bir sabahın sırrı karmaşık tariflerde değil; doğru çekirdekte, özenli bir demlemede ve sade, iyi malzemeyle hazırlanmış bir kahvaltıda.
         </p>
         <p>
-          Ayvalık&apos;ın taş sokaklarında açtığımız kafemizde, dünyanın farklı bölgelerinden seçtiğimiz çekirdekleri küçük partiler halinde kavuruyoruz. Her partiyi tadıyor, en iyi hâlini bulana kadar profili ayarlıyoruz.
+          Ayvalık&apos;ın taş sokaklarındaki dükkânımızda güne kahvaltıyla başlıyor, gün boyu bagel sandviçler ve üçüncü nesil kahve hazırlıyoruz.
         </p>
-        <h2>Neden küçük partiler?</h2>
+        <h2>Kahvelerimiz</h2>
         <p>
-          Kahve kavrulduktan sonraki haftalarda en canlı hâlindedir. Az ve sık kavurarak raflarımızda bekleyen kahve yerine, size hep taze kahve gönderiyoruz.
+          Kahvelerimizi kendimiz kavurmuyoruz; güvendiğimiz kavurmacıların farklı bölgelerden getirdiği çekirdekleri seçiyoruz. Her birini önce kafede, farklı yöntemlerle demleyip deniyor; beğendiklerimizi rafımıza ve bu siteye alıyoruz.
         </p>
         <h2>Kafemize bekleriz</h2>
         <p>Yeni kahvelerimizi ilk kafede deniyoruz. Uğrayın, birlikte tadalım.</p>
       </div>
-      <div className="mt-10 flex gap-3">
+      <div className="mt-10 flex flex-wrap gap-3">
         <Link href="/magaza" className="dugme">Kahvelerimiz</Link>
-        <Link href="/iletisim" className="dugme-ikincil">Ziyaret bilgileri</Link>
+        <Link href="/menu" className="dugme-ikincil">Menü</Link>
       </div>
     </div>
   );

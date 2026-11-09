@@ -10,7 +10,7 @@ from models import KullaniciOnayi
 
 # TASLAK: isletme bilgileri doldurulmadan ve hukuki kontrol yapilmadan yayina alinmamali (bkz. ROADMAP.md).
 # Metin degisince surum degisir, yeni uyelerden yeni metne onay alinir.
-VERI_SORUMLUSU = "[İşletme unvanı] (Paleo Coffee Ayvalık), Zekibey Mah. 13 Nisan Cad. No:51, Ayvalık / Balıkesir. Telefon: 0530 265 91 03. E-posta: [iletisim@alanadi]"
+VERI_SORUMLUSU = "[İşletme unvanı] (Paleo Coffee Ayvalık), Zekibey Mah. 13 Nisan Cad. 33003 Sk. No:1/A, Ayvalık / Balıkesir. Telefon: 0543 651 42 96. E-posta: [iletisim@alanadi]"
 
 AYDINLATMA = f"""Veri sorumlusu: {VERI_SORUMLUSU}
 

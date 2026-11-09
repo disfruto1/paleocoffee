@@ -22,7 +22,7 @@ export function Alt() {
           <p className="etiket mb-4 text-zemin/50">İletişim</p>
           <a href={SITE.telefonBaglantisi} className="block text-zemin/80 hover:text-zemin">{SITE.telefon}</a>
           {SITE.eposta && <a href={`mailto:${SITE.eposta}`} className="block text-zemin/80 hover:text-zemin">{SITE.eposta}</a>}
-          {SITE.instagram && <a href={SITE.instagram} className="text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Instagram</a>}
+          {SITE.instagram && <a href={SITE.instagram} className="block text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">{SITE.instagramAdi}</a>}
           <a href={SITE.haritaAdresi} className="block text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Google Haritalar</a>
         </div>
         <div className="flex flex-col gap-1.5">

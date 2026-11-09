@@ -5,7 +5,7 @@ import { kategorileriGetir, urunleriGetir } from "@/lib/sunucu";
 
 export const metadata: Metadata = {
   title: "Mağaza",
-  description: "Taze kavrulmuş çekirdek ve öğütülmüş nitelikli kahveler, demleme ekipmanları.",
+  description: "Çekirdek ve öğütülmüş nitelikli kahveler, demleme ekipmanları.",
 };
 
 export default async function Magaza({ searchParams }: { searchParams: Promise<{ kategori?: string; q?: string }> }) {

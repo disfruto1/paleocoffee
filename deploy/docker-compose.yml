@@ -1,0 +1,104 @@
+# Yayin kurulumu: internet -> (Cloudflare) -> Caddy (HTTPS) -> web sitesi (Next.js) ve API (FastAPI) -> PostgreSQL
+# Yalnizca Caddy disariya acilir. Adim adim anlatim: deploy/YAYIN.md
+name: paleo
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paleo_db
+      POSTGRES_USER: paleo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?deploy/.env icinde POSTGRES_PASSWORD eksik}
+    volumes:
+      - db_verisi:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paleo -d paleo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - ic
+
+  app:
+    build: ../backend
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - yuklenen:/app/yuklenen
+    environment:
+      DATABASE_URL: postgresql+psycopg2://paleo:${POSTGRES_PASSWORD}@db:5432/paleo_db
+      # X-Forwarded-For yalnizca Caddy'den gelirse dikkate alinir
+      FORWARDED_ALLOW_IPS: 172.31.0.10
+      ALLOWED_ORIGINS: https://${SITE_ALAN_ADI}
+      SITE_ADRESI: https://${SITE_ALAN_ADI}
+      PAYTR_DONUS_ADRESI: https://${API_ALAN_ADI}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    networks:
+      - ic
+
+  web:
+    build:
+      context: ../web
+      args:
+        API_URL: http://app:8000
+        NEXT_PUBLIC_API_URL: https://${API_ALAN_ADI:?deploy/.env icinde API_ALAN_ADI eksik}
+        NEXT_PUBLIC_SITE_URL: https://${SITE_ALAN_ADI:?deploy/.env icinde SITE_ALAN_ADI eksik}
+    restart: unless-stopped
+    environment:
+      # Urun sayfalari sunucuda olusturulurken API'ye ic agdan gidilir
+      API_URL: http://app:8000
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/menu"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    networks:
+      - ic
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ALAN_ADI: ${SITE_ALAN_ADI}
+      API_ALAN_ADI: ${API_ALAN_ADI}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_veri:/data
+      - caddy_ayar:/config
+    networks:
+      ic:
+        ipv4_address: 172.31.0.10
+
+networks:
+  ic:
+    ipam:
+      config:
+        - subnet: 172.31.0.0/24
+
+volumes:
+  db_verisi:
+  yuklenen:
+  caddy_veri:
+  caddy_ayar:

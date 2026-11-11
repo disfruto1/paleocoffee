@@ -1,0 +1,5 @@
+Fotograflari bu klasore su adlarla koyun (JPG, en az 1600 px genislik):
+  hero.jpg  - ana sayfanin ust bolumu (dikey veya kare iyi durur)
+  kafe.jpg  - ana sayfadaki "Kafemiz" bolumu ve Ziyaret sayfasi
+  kavurma.jpg - Hikayemiz sayfasi
+Dosya yoksa yerine renkli zemin gorunur, site bozulmaz.

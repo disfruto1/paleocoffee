@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+.pytest_cache/
+.DS_Store
+deploy/yedekler/
+node_modules/
+.next/
+web/.env.local
+*.tsbuildinfo
+next-env.d.ts
+yuklenen/

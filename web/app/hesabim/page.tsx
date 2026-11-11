@@ -55,7 +55,7 @@ export default function Hesabim() {
         {siparisler === null ? (
           <p className="mt-4 text-soluk">Yükleniyor…</p>
         ) : siparisler.length === 0 ? (
-          <p className="mt-4 text-soluk">Henüz siparişiniz yok. <Link href="/magaza" className="underline">Mağazaya göz atın.</Link></p>
+          <p className="mt-4 text-soluk">Henüz siparişiniz yok. <Link href="/urunler" className="underline">Ürünlerimize göz atın.</Link></p>
         ) : (
           <ul className="mt-4 divide-y divide-cizgi border-y border-cizgi">
             {siparisler.map((s) => (

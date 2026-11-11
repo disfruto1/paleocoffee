@@ -51,7 +51,7 @@ export default function Odeme() {
     return (
       <div className="kap py-28 text-center">
         <h1 className="font-baslik text-3xl">Sepetiniz boş</h1>
-        <Link href="/magaza" className="dugme mt-6">Mağazaya git</Link>
+        <Link href="/urunler" className="dugme mt-6">Ürünlere git</Link>
       </div>
     );
   }

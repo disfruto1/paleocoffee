@@ -11,8 +11,8 @@ export default function SepetSayfasi() {
     return (
       <div className="kap py-28 text-center">
         <h1 className="font-baslik text-4xl">Sepetiniz boş</h1>
-        <p className="mt-3 text-soluk">Kahvelerimize ve demleme ekipmanlarına göz atın.</p>
-        <Link href="/magaza" className="dugme mt-8">Mağazaya git</Link>
+        <p className="mt-3 text-soluk">Kahvelerimize, ekipmanlara ve diğer ürünlerimize göz atın.</p>
+        <Link href="/urunler" className="dugme mt-8">Ürünlere git</Link>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export default function SepetSayfasi() {
           </div>
           <p className="mt-2 text-sm text-soluk">Teslimat ücreti bir sonraki adımda, seçtiğiniz yönteme göre eklenir.</p>
           <Link href="/odeme" className="dugme mt-6 w-full">Siparişi tamamla</Link>
-          <Link href="/magaza" className="mt-3 block text-center text-sm underline underline-offset-4 hover:text-vurgu">Alışverişe devam et</Link>
+          <Link href="/urunler" className="mt-3 block text-center text-sm underline underline-offset-4 hover:text-vurgu">Alışverişe devam et</Link>
         </aside>
       </div>
     </div>

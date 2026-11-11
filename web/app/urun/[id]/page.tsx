@@ -37,8 +37,8 @@ export default async function UrunSayfasi({ params }: Parametre) {
 
   return (
     <div className="kap py-10">
-      <Link href="/magaza" className="etiket text-soluk hover:text-vurgu">
-        ← Tüm kahveler
+      <Link href="/urunler" className="etiket text-soluk hover:text-vurgu">
+        ← Tüm ürünler
       </Link>
       <div className="mt-6 grid gap-10 md:grid-cols-2 lg:gap-16">
         <div className="aspect-square overflow-hidden bg-kum md:sticky md:top-32 md:self-start">

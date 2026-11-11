@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   // Docker imaji icin: yalnizca calismak icin gereken dosyalar kopyalanir (bkz. web/Dockerfile)
   output: "standalone",
   poweredByHeader: false,
+  // Eski magaza adresi (paylasilmis baglantilar bozulmasin)
+  async redirects() {
+    return [{ source: "/magaza", destination: "/urunler", permanent: true }];
+  },
   // Yonetim panelinden yuklenen gorseller API'de durur, site kendi adresinden sunar
   async rewrites() {
     const genel = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");

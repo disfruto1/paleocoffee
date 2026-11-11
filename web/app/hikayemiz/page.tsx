@@ -24,7 +24,7 @@ export default function Hikayemiz() {
         <p>Yeni kahvelerimizi ilk dükkânda deniyoruz. Uğrayın, birlikte tadalım.</p>
       </div>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/magaza" className="dugme">Kahvelerimiz</Link>
+        <Link href="/urunler" className="dugme">Ürünlerimiz</Link>
         <Link href="/menu" className="dugme-ikincil">Menü</Link>
       </div>
     </div>

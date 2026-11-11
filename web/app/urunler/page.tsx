@@ -4,8 +4,8 @@ import { UrunKarti } from "@/components/UrunKarti";
 import { kategorileriGetir, urunleriGetir } from "@/lib/sunucu";
 
 export const metadata: Metadata = {
-  title: "Mağaza",
-  description: "Çekirdek ve öğütülmüş nitelikli kahveler, demleme ekipmanları.",
+  title: "Ürünler",
+  description: "Paleo Coffee & More ürünleri: çekirdek ve öğütülmüş nitelikli kahveler, demleme ekipmanları ve dükkânımızdan seçtiklerimiz.",
 };
 
 export default async function Magaza({ searchParams }: { searchParams: Promise<{ kategori?: string; q?: string }> }) {
@@ -17,23 +17,23 @@ export default async function Magaza({ searchParams }: { searchParams: Promise<{
 
   return (
     <div className="kap py-12">
-      <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Kahveler</h1>
-      <p className="mt-3 max-w-xl text-soluk">Çekirdek ya da demleme yöntemine göre öğütülmüş kahveler ve evde iyi kahve için ekipmanlar.</p>
+      <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">Ürünler</h1>
+      <p className="mt-3 max-w-xl text-soluk">Çekirdek ya da demleme yöntemine göre öğütülmüş kahveler, evde iyi kahve için ekipmanlar ve dükkânımızdan seçtiklerimiz.</p>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
-        <Link href="/magaza" className={` border px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${!kategoriId ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"}`}>
+        <Link href="/urunler" className={` border px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${!kategoriId ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"}`}>
           Tümü
         </Link>
         {kategoriler.map((k) => (
           <Link
             key={k.id}
-            href={`/magaza?kategori=${k.id}`}
+            href={`/urunler?kategori=${k.id}`}
             className={` border px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${kategoriId === String(k.id) ? "border-murekkep bg-murekkep text-zemin" : "border-murekkep hover:bg-kum"}`}
           >
             {k.ad}
           </Link>
         ))}
-        <form action="/magaza" className="ml-auto w-full sm:w-64">
+        <form action="/urunler" className="ml-auto w-full sm:w-64">
           {kategoriId && <input type="hidden" name="kategori" value={kategoriId} />}
           <input name="q" defaultValue={arama} placeholder="Ara: Etiyopya, V60…" className="girdi py-2 text-sm" aria-label="Ürün ara" />
         </form>

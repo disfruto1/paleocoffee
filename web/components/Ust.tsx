@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useOturum, useSepet } from "./Saglayicilar";
 
 const BAGLANTILAR = [
-  { href: "/magaza", ad: "Kahveler" },
+  { href: "/urunler", ad: "Ürünler" },
   { href: "/menu", ad: "Menü" },
   { href: "/hikayemiz", ad: "Hikâyemiz" },
-  { href: "/iletisim", ad: "Ziyaret" },
+  { href: "/iletisim", ad: "İletişim" },
 ];
 
 export function Ust() {
@@ -31,7 +31,7 @@ export function Ust() {
           </Link>
           <nav className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.12em] md:flex">
             {BAGLANTILAR.map((b) => (
-              <Link key={b.href} href={b.href} className={`py-1 ${yol.startsWith(b.href) ? "border-b-2 border-vurgu" : "hover:text-vurgu"}`}>
+              <Link key={b.href} href={b.href} className={`py-1 ${yol.startsWith(b.href) || (b.href === "/urunler" && yol.startsWith("/urun/")) ? "border-b-2 border-vurgu" : "hover:text-vurgu"}`}>
                 {b.ad}
               </Link>
             ))}

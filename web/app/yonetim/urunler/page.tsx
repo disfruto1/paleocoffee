@@ -23,9 +23,11 @@ type Form = {
   ogutme_secilebilir: boolean;
   one_cikan: boolean;
   secenekler: SecenekForm[];
+  tur: "kahve" | "diger"; // yalnizca formda: kahve alanlari gosterilsin mi
 };
 
 const BOS: Form = {
+  tur: "diger",
   ad: "", aciklama: "", fiyat: "", stok: "", gorsel_url: "", kategori_id: "", mensei: "", isleme: "", kavrum: "",
   tat_notlari: "", ogutme_secilebilir: false, one_cikan: false, secenekler: [],
 };
@@ -42,6 +44,7 @@ function formdan(u: Urun): Form {
     kategori_id: u.kategori_id ? String(u.kategori_id) : "", mensei: u.mensei || "", isleme: u.isleme || "", kavrum: u.kavrum || "",
     tat_notlari: u.tat_notlari || "", ogutme_secilebilir: u.ogutme_secilebilir, one_cikan: u.one_cikan,
     secenekler: u.secenekler.filter((s) => s.aktif).map((s) => ({ id: s.id, ad: s.ad, fiyat: s.fiyat, stok: s.stok === null ? "" : String(s.stok) })),
+    tur: u.mensei || u.isleme || u.kavrum || u.tat_notlari || u.ogutme_secilebilir ? "kahve" : "diger",
   };
 }
 
@@ -49,6 +52,21 @@ const sayi = (d: string) => (d.trim() === "" ? null : Number(d.replace(",", ".")
 
 function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategoriler: Kategori[]; bitti: (u: Urun | null) => void }) {
   const [f, setF] = useState<Form>(urun ? formdan(urun) : BOS);
+  const kahve = f.tur === "kahve";
+
+  function turSec(tur: Form["tur"]) {
+    setF((e) => {
+      if (tur === e.tur) return e;
+      // Yeni kahvede gramaj secenekleri ve ogutme hazir gelsin
+      if (tur === "kahve" && !urun && e.secenekler.length === 0) return { ...e, ...KAHVE_SABLONU, tur };
+      if (tur === "diger") {
+        // Sablondan gelen bos gramaj secenekleri diger urune tasinmasin
+        const secenekler = e.secenekler.filter((x) => x.id !== undefined || x.fiyat.trim());
+        return { ...e, tur, ogutme_secilebilir: false, secenekler, fiyat: secenekler.length ? e.fiyat : e.fiyat === "0" ? "" : e.fiyat };
+      }
+      return { ...e, tur };
+    });
+  }
   const [hata, setHata] = useState<string | null>(null);
   const [bekle, setBekle] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
@@ -83,8 +101,9 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
       stok: f.secenekler.length ? null : sayi(f.stok),
       gorsel_url: f.gorsel_url.trim() || null,
       kategori_id: f.kategori_id ? Number(f.kategori_id) : null,
-      mensei: f.mensei, isleme: f.isleme, kavrum: f.kavrum, tat_notlari: f.tat_notlari,
-      ogutme_secilebilir: f.ogutme_secilebilir,
+      // Kahve olmayan urunde kahve bilgileri bos kaydedilir
+      mensei: kahve ? f.mensei : "", isleme: kahve ? f.isleme : "", kavrum: kahve ? f.kavrum : "", tat_notlari: kahve ? f.tat_notlari : "",
+      ogutme_secilebilir: kahve && f.ogutme_secilebilir,
       one_cikan: f.one_cikan,
       secenekler: f.secenekler.map((s) => ({ id: s.id, ad: s.ad.trim(), fiyat: s.fiyat.replace(",", "."), stok: sayi(s.stok), aktif: true })),
     };
@@ -108,13 +127,25 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
     <form onSubmit={kaydet} className="space-y-6 bg-white p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-baslik text-2xl">{urun ? "Ürünü düzenle" : "Yeni ürün"}</h2>
-        {!urun && (
-          <button type="button" className="text-sm underline underline-offset-4" onClick={() => setF((e) => ({ ...e, ...KAHVE_SABLONU }))}>
-            Kahve şablonu (250 g / 1 kg, öğütme)
-          </button>
-        )}
       </div>
       <Hata mesaj={hata} />
+      <fieldset>
+        <legend className="mb-2 font-medium">Ürün türü</legend>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {([
+            ["kahve", "Kahve", "Menşei, kavrum, tat notları, gramaj seçenekleri ve öğütme"],
+            ["diger", "Diğer ürün", "Ekipman, aksesuar, yiyecek, hediyelik vb."],
+          ] as const).map(([deger, ad, aciklama]) => (
+            <label key={deger} className={`flex cursor-pointer gap-3 border p-4 ${f.tur === deger ? "border-murekkep bg-zemin" : "border-cizgi"}`}>
+              <input type="radio" name="tur" checked={f.tur === deger} onChange={() => turSec(deger)} className="mt-1" />
+              <span>
+                <span className="font-medium">{ad}</span>
+                <span className="block text-sm text-soluk">{aciklama}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <div className="grid gap-4 sm:grid-cols-2">
         {alan("Ad", <input required maxLength={120} value={f.ad} onChange={(e) => yaz("ad", e.target.value)} className="girdi" />)}
         {alan("Kategori", (
@@ -144,8 +175,9 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
         </div>
       </div>
 
+      {kahve && (
       <fieldset className="grid gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-medium">Kahve bilgileri <span className="text-sm font-normal text-soluk">(ekipmanda boş bırakın)</span></legend>
+        <legend className="mb-2 font-medium">Kahve bilgileri</legend>
         {alan("Menşei", <input value={f.mensei} maxLength={120} onChange={(e) => yaz("mensei", e.target.value)} placeholder="Etiyopya, Yirgacheffe" className="girdi" />)}
         {alan("İşleme", <input value={f.isleme} maxLength={60} onChange={(e) => yaz("isleme", e.target.value)} placeholder="Yıkanmış, doğal, honey" className="girdi" />)}
         {alan("Kavrum", (
@@ -161,11 +193,13 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
           <input type="checkbox" checked={f.ogutme_secilebilir} onChange={(e) => yaz("ogutme_secilebilir", e.target.checked)} />
           Müşteri öğütme seçsin
         </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={f.one_cikan} onChange={(e) => yaz("one_cikan", e.target.checked)} />
-          Ana sayfada göster
-        </label>
       </fieldset>
+      )}
+
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked={f.one_cikan} onChange={(e) => yaz("one_cikan", e.target.checked)} />
+        Ana sayfada &quot;Öne çıkan ürünler&quot; arasında göster
+      </label>
 
       <fieldset>
         <legend className="mb-2 font-medium">Fiyat ve stok</legend>
@@ -188,7 +222,7 @@ function UrunFormu({ urun, kategoriler, bitti }: { urun: Urun | null; kategorile
           </div>
         )}
         <button type="button" className="mt-3 text-sm underline underline-offset-4" onClick={() => setF((e) => ({ ...e, secenekler: [...e.secenekler, { ad: "", fiyat: "", stok: "" }] }))}>
-          + Seçenek ekle (gramaj vb.)
+          + Seçenek ekle ({kahve ? "250 g, 1 kg gibi" : "boy, renk gibi; fiyatı veya stoğu farklıysa"})
         </button>
       </fieldset>
 

@@ -14,6 +14,9 @@ export const SITE = {
     { gun: "Salı hariç her gün", saat: "08:30 – 18:00" },
     { gun: "Salı", saat: "Kapalı" },
   ],
+  // Ana sayfanin ust bolumundeki video (web/public/gorseller altinda, ornek "/gorseller/hero.mp4").
+  // Bos ise /gorseller/hero.jpg fotografi gosterilir.
+  heroVideo: "",
   telefonBaglantisi: "tel:+905436514296",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
 };

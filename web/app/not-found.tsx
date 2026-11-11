@@ -5,7 +5,7 @@ export default function Bulunamadi() {
     <div className="kap py-28 text-center">
       <h1 className="font-baslik text-4xl">Sayfa bulunamadı</h1>
       <p className="mt-3 text-soluk">Aradığınız sayfa taşınmış ya da satıştan kalkmış olabilir.</p>
-      <Link href="/magaza" className="dugme mt-8">Mağazaya dön</Link>
+      <Link href="/urunler" className="dugme mt-8">Ürünlere dön</Link>
     </div>
   );
 }

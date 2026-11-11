@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Ziyaret ve iletişim", description: "Paleo Coffee Ayvalık adresi, çalışma saatleri ve iletişim bilgileri." };
+export const metadata: Metadata = { title: "İletişim", description: "Paleo Coffee & More Ayvalık adresi, çalışma saatleri ve iletişim bilgileri." };
 
 export default function Iletisim() {
   return (
     <div className="kap py-16">
-      <h1 className="font-baslik text-4xl md:text-5xl">Ziyaret ve iletişim</h1>
+      <h1 className="font-baslik border-b border-murekkep pb-4 text-6xl font-semibold md:text-8xl">İletişim</h1>
       <div className="mt-12 grid gap-12 md:grid-cols-3">
         <section>
           <h2 className="font-baslik text-xl">Adres</h2>

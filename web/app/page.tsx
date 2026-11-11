@@ -26,16 +26,21 @@ export default async function AnaSayfa() {
             Ayvalık&apos;ın taş sokaklarında kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Evde demlemek için seçtiğimiz çekirdekler ve ekipmanlar da burada.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/magaza" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Kahveleri keşfet</Link>
+            <Link href="/urunler" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Ürünleri keşfet</Link>
             <Link href="/iletisim" className="dugme-ikincil hover:text-vurgu">Dükkâna uğra</Link>
           </div>
         </div>
         <div
-          className="min-h-80 bg-cover bg-center"
+          className="relative min-h-80 overflow-hidden bg-cover bg-center"
           style={{ backgroundImage: "url(/gorseller/hero.jpg), linear-gradient(160deg, #5b3a26, #1c1a17 80%)" }}
           role="img"
-          aria-label="Paleo Coffee"
-        />
+          aria-label="Paleo Coffee & More"
+        >
+          {SITE.heroVideo && (
+            // Sessiz ve dongulu; hareket azaltma tercihinde fotograf kalir (globals.css)
+            <video className="hero-video absolute inset-0 h-full w-full object-cover" src={SITE.heroVideo} poster="/gorseller/hero.jpg" autoPlay muted loop playsInline aria-hidden />
+          )}
+        </div>
       </section>
 
       <div className="overflow-hidden border-b border-murekkep bg-vurgu py-3 text-zemin" aria-hidden>
@@ -53,8 +58,8 @@ export default async function AnaSayfa() {
       {urunler.length > 0 && (
         <section className="kap py-20">
           <div className="mb-10 flex items-end justify-between gap-4 border-b border-murekkep pb-4">
-            <h2 className="font-baslik text-4xl md:text-6xl">Öne çıkan kahveler</h2>
-            <Link href="/magaza" className="etiket shrink-0 hover:text-vurgu">Tümünü gör →</Link>
+            <h2 className="font-baslik text-4xl md:text-6xl">Öne çıkan ürünler</h2>
+            <Link href="/urunler" className="etiket shrink-0 hover:text-vurgu">Tümünü gör →</Link>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-4">
             {urunler.map((u) => <UrunKarti key={u.id} urun={u} />)}

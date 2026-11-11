@@ -26,7 +26,7 @@ export default function Kategoriler() {
 
   return (
     <div className="max-w-xl">
-      <p className="text-sm text-soluk">Mağazada filtre olarak görünür. Örnek: Tek köken, Harman, Demleme ekipmanı, Aksesuar.</p>
+      <p className="text-sm text-soluk">Ürünler sayfasında filtre olarak görünür. Örnek: Tek köken, Harman, Demleme ekipmanı, Aksesuar, Yiyecek.</p>
       <form
         className="mt-4 flex gap-2"
         onSubmit={(e) => {

@@ -1,3 +1,8 @@
+// Online satis (urunler, sepet, odeme, uyelik, yonetim paneli) acik mi. Ilk asamada site yalnizca
+// tanitim sitesidir: kapaliyken bu bolumler menude ve sayfalarda gorunmez (bkz. scripts/tanitim.mjs).
+// Satis acilinca derlemede NEXT_PUBLIC_SATIS_ACIK=1 verilir (deploy/docker-compose.yml bunu yapar).
+export const SATIS_ACIK = process.env.NEXT_PUBLIC_SATIS_ACIK === "1";
+
 // Kafenin bilgileri (kafeden alindi, Kasim 2026). Bos alanlar sitede gosterilmez.
 // Saatler kis saatleridir; yazin degisecek.
 export const SITE = {

@@ -89,8 +89,8 @@ esac
 echo "== Web sitesi HTTPS uzerinden aciliyor"
 curl -4 -skf --retry 10 --retry-all-errors --retry-delay 1 --resolve site.localhost:443:127.0.0.1 https://site.localhost/menu \
   | grep -q "Paleo" || basarisiz "web sitesi cevap vermedi"
-kod=$(curl -4 -sk -o /dev/null -w '%{http_code}' --resolve site.localhost:443:127.0.0.1 https://site.localhost/magaza)
-[ "$kod" = 200 ] || basarisiz "magaza sayfasi acilmadi (kod $kod)"
+kod=$(curl -4 -sk -o /dev/null -w '%{http_code}' --resolve site.localhost:443:127.0.0.1 https://site.localhost/urunler)
+[ "$kod" = 200 ] || basarisiz "urunler sayfasi acilmadi (kod $kod)"
 cors=$(curl -4 -sk -o /dev/null -D - --resolve localhost:443:127.0.0.1 -X OPTIONS \
   -H 'Origin: https://site.localhost' -H 'Access-Control-Request-Method: POST' https://localhost/giris | tr -d '\r')
 case "$cors" in

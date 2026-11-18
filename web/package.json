@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "build:tanitim": "node scripts/tanitim.mjs"
   },
   "dependencies": {
     "next": "16.4.5",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SATIS_ACIK } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Hikâyemiz", description: "Paleo Coffee: Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve." };
 
@@ -18,13 +19,13 @@ export default function Hikayemiz() {
         </p>
         <h2>Kahvelerimiz</h2>
         <p>
-          Kahvelerimizi kendimiz kavurmuyoruz; güvendiğimiz kavurmacıların farklı bölgelerden getirdiği çekirdekleri seçiyoruz. Her birini önce dükkânda, farklı yöntemlerle demleyip deniyor; beğendiklerimizi rafımıza ve bu siteye alıyoruz.
+          Kahvelerimizi kendimiz kavurmuyoruz; güvendiğimiz kavurmacıların farklı bölgelerden getirdiği çekirdekleri seçiyoruz. Her birini önce dükkânda, farklı yöntemlerle demleyip deniyor; beğendiklerimizi dükkânımızda sunuyoruz.
         </p>
         <h2>Dükkânımıza bekleriz</h2>
         <p>Yeni kahvelerimizi ilk dükkânda deniyoruz. Uğrayın, birlikte tadalım.</p>
       </div>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/urunler" className="dugme">Ürünlerimiz</Link>
+        {SATIS_ACIK ? <Link href="/urunler" className="dugme">Ürünlerimiz</Link> : <Link href="/iletisim" className="dugme">İletişim</Link>}
         <Link href="/menu" className="dugme-ikincil">Menü</Link>
       </div>
     </div>

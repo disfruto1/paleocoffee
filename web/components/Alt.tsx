@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { SATIS_ACIK, SITE } from "@/lib/site";
 
 export function Alt() {
   return (
@@ -8,7 +8,7 @@ export function Alt() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/marka/logo-tam-acik.png" alt={`Paleo Coffee & More. ${SITE.slogan}`} width={900} height={601} loading="lazy" className="h-auto w-full max-w-md" />
       </div>
-      <div className="kap grid gap-10 py-12 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      <div className={`kap grid gap-10 py-12 text-sm sm:grid-cols-2 ${SATIS_ACIK ? "lg:grid-cols-3" : ""}`}>
         <div className="space-y-3">
           <p className="etiket text-zemin/50">İletişim</p>
           <p className="text-zemin/80">{SITE.adres}</p>
@@ -24,6 +24,8 @@ export function Alt() {
           <a href={SITE.haritaAdresi} className="block text-zemin/80 underline underline-offset-4 hover:text-zemin" rel="noopener" target="_blank">Google Haritalar</a>
           </div>
         </div>
+        {SATIS_ACIK ? (
+        <>
         <div className="flex flex-col gap-1.5">
           <p className="etiket mb-3 text-zemin/50">Alışveriş</p>
           <Link href="/urunler" className="text-zemin/80 hover:text-zemin">Ürünler</Link>
@@ -36,6 +38,15 @@ export function Alt() {
           <Link href="/sozlesmeler/on-bilgilendirme" className="text-zemin/80 hover:text-zemin">Ön bilgilendirme formu</Link>
           <Link href="/sozlesmeler/kvkk" className="text-zemin/80 hover:text-zemin">KVKK aydınlatma metni</Link>
         </div>
+        </>
+        ) : (
+        <div className="flex flex-col gap-1.5">
+          <p className="etiket mb-3 text-zemin/50">Paleo</p>
+          <Link href="/menu" className="text-zemin/80 hover:text-zemin">Menü</Link>
+          <Link href="/hikayemiz" className="text-zemin/80 hover:text-zemin">Hikâyemiz</Link>
+          <Link href="/iletisim" className="text-zemin/80 hover:text-zemin">İletişim</Link>
+        </div>
+        )}
       </div>
       <div className="kap etiket border-t border-zemin/15 py-5 text-zemin/40">© {new Date().getFullYear()} {SITE.tamAd}</div>
     </footer>

@@ -40,8 +40,14 @@ jobs:
       - run: npm ci
       - name: Tip kontrolu
         run: npm run lint
-      - name: Derleme
+      - name: Derleme (satisli tam site)
         run: npm run build
+        env:
+          NEXT_PUBLIC_SATIS_ACIK: "1"
+      - name: Derleme (tanitim sitesi, sunucusuz)
+        run: npm run build:tanitim
+        env:
+          NEXT_PUBLIC_SITE_URL: https://paleocoffee.com.tr
 
   yayin-kurulumu:
     runs-on: ubuntu-latest

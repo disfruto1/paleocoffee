@@ -12,3 +12,5 @@ web/.env.local
 *.tsbuildinfo
 next-env.d.ts
 yuklenen/
+web/out/
+web/.tanitim/

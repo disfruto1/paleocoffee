@@ -1,13 +1,28 @@
 import Link from "next/link";
 import { UrunKarti } from "@/components/UrunKarti";
-import { SITE } from "@/lib/site";
+import { SATIS_ACIK, SITE } from "@/lib/site";
 import { urunleriGetir } from "@/lib/sunucu";
 
-const MENSEILER = ["Etiyopya", "Kolombiya", "Kenya", "Brezilya", "Guatemala", "Ruanda", "Kosta Rika", "Endonezya"];
+// Kayan seritte gecenler: satis acikken kahvelerin geldigi yerler, tanitimda menuden
+const SERIT = SATIS_ACIK
+  ? ["Etiyopya", "Kolombiya", "Kenya", "Brezilya", "Guatemala", "Ruanda", "Kosta Rika", "Endonezya"]
+  : ["Kahvaltı", "Bagel", "Espresso", "V60", "Kruvasan", "Cold brew", "Granola bowl", "Flat white"];
+
+const OZELLIKLER: [string, string, string][] = SATIS_ACIK
+  ? [
+      ["01", "Seçilmiş çekirdekler", "Güvendiğimiz kavurmacılardan seçtiğimiz nitelikli kahveler; önce dükkânda deniyor, sonra rafımıza alıyoruz."],
+      ["02", "İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
+      ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da dükkândan teslim al."],
+    ]
+  : [
+      ["Sabah", "Kahvaltı", "Kahvaltı tabağı, omletler ve kruvasan tabakları; ekşi maya ekmek üstüler ve bowl'lar."],
+      ["Öğlen", "Bagel ve kruvasan", "El yapımı bagel ekmekle rozbif, hindi füme, avokado ve pesto mozzarella sandviçler."],
+      ["Gün boyu", "Üçüncü nesil kahve", "Espresso bazlı içecekler, V60 ve filtre kahve, soğuk kahveler ve özel çaylar."],
+    ];
 
 export default async function AnaSayfa() {
-  let urunler = await urunleriGetir("&one_cikan=true");
-  if (!urunler.length) urunler = await urunleriGetir();
+  let urunler = SATIS_ACIK ? await urunleriGetir("&one_cikan=true") : [];
+  if (SATIS_ACIK && !urunler.length) urunler = await urunleriGetir();
   urunler = urunler.slice(0, 4);
 
   return (
@@ -23,10 +38,15 @@ export default async function AnaSayfa() {
             <span className="text-vurgu">hâli.</span>
           </h1>
           <p className="mt-8 max-w-md text-lg text-zemin/70">
-            Ayvalık&apos;ın taş sokaklarında kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Evde demlemek için seçtiğimiz çekirdekler ve ekipmanlar da burada.
+            Ayvalık&apos;ın taş sokaklarında kahvaltı, bagel sandviçler ve üçüncü nesil kahve.
+            {SATIS_ACIK && " Evde demlemek için seçtiğimiz çekirdekler ve ekipmanlar da burada."}
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/urunler" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Ürünleri keşfet</Link>
+            {SATIS_ACIK ? (
+              <Link href="/urunler" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Ürünleri keşfet</Link>
+            ) : (
+              <Link href="/menu" className="dugme bg-zemin text-murekkep hover:bg-vurgu hover:text-zemin">Menüye göz at</Link>
+            )}
             <Link href="/iletisim" className="dugme-ikincil hover:text-vurgu">Dükkâna uğra</Link>
           </div>
         </div>
@@ -47,7 +67,7 @@ export default async function AnaSayfa() {
         <div className="kayan flex w-max">
           {[0, 1].map((i) => (
             <p key={i} className="font-baslik flex shrink-0 text-xl">
-              {MENSEILER.map((m) => (
+              {SERIT.map((m) => (
                 <span key={m} className="px-6">{m} <span className="pl-6 text-zemin/50">✳</span></span>
               ))}
             </p>
@@ -78,11 +98,7 @@ export default async function AnaSayfa() {
 
       <section className="kap mt-px">
         <div className="grid gap-px border border-t-0 border-murekkep bg-murekkep md:grid-cols-3">
-        {[
-          ["01", "Seçilmiş çekirdekler", "Güvendiğimiz kavurmacılardan seçtiğimiz nitelikli kahveler; önce dükkânda deniyor, sonra rafımıza alıyoruz."],
-          ["02", "İstediğin öğütme", "Çekirdek ya da demleme yöntemine göre öğütülmüş: espresso'dan Türk kahvesine."],
-          ["03", "Kapına kadar", "Türkiye geneline kargo, Ayvalık içine aynı gün teslimat ya da dükkândan teslim al."],
-        ].map(([no, b, m]) => (
+        {OZELLIKLER.map(([no, b, m]) => (
           <div key={no} className="bg-zemin p-8 md:p-10">
             <p className="etiket text-vurgu">{no}</p>
             <h3 className="font-baslik mt-4 text-2xl">{b}</h3>

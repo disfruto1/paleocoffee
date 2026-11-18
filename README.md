@@ -6,6 +6,10 @@ Kafenin tanıtım sitesi ve online satış: çekirdek ve öğütülmüş kahve, 
 - `backend/`: FastAPI + PostgreSQL API (üyelik, ürünler, siparişler, PayTR, teslimat ücretleri)
 - `deploy/`: Docker + Caddy yayın kurulumu, adım adım rehber: [deploy/YAYIN.md](deploy/YAYIN.md)
 
+**İlk aşama: yalnızca tanıtım sitesi.** Online satış şimdilik kapalı. Site Ana sayfa, Menü, Hikâyemiz ve İletişim
+sayfalarından oluşur, sunucusuz yayınlanır: [deploy/TANITIM.md](deploy/TANITIM.md). Satış kodu yerinde durur;
+`NEXT_PUBLIC_SATIS_ACIK=1` ile derlenince açılır (yerelde geliştirirken `web/.env.local` içine yazın).
+
 Yol haritası ve bilinen riskler: [ROADMAP.md](ROADMAP.md)
 
 ## Yerelde çalıştırma

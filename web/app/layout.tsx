@@ -3,7 +3,7 @@ import { IBM_Plex_Mono, Inter, Oswald } from "next/font/google";
 import { Alt } from "@/components/Alt";
 import { Saglayicilar } from "@/components/Saglayicilar";
 import { Ust } from "@/components/Ust";
-import { SITE } from "@/lib/site";
+import { SATIS_ACIK, SITE } from "@/lib/site";
 import "./globals.css";
 
 const oswald = Oswald({ subsets: ["latin", "latin-ext"], variable: "--font-oswald" });
@@ -13,7 +13,9 @@ const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: `${SITE.tamAd} | Ayvalık'ta kahvaltı ve üçüncü nesil kahve`, template: `%s | ${SITE.tamAd} Ayvalık` },
-  description: "Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Çekirdek ve öğütülmüş nitelikli kahve, demleme ekipmanları; Türkiye geneline kargo, Ayvalık içi teslimat.",
+  description: SATIS_ACIK
+    ? "Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Çekirdek ve öğütülmüş nitelikli kahve, demleme ekipmanları; Türkiye geneline kargo, Ayvalık içi teslimat."
+    : "Ayvalık'ta kahvaltı, bagel ve kruvasan sandviçler, üçüncü nesil kahve. Zekibey, 13 Nisan Caddesi; salı hariç her gün 08:30–18:00.",
   openGraph: { siteName: SITE.tamAd, locale: "tr_TR", type: "website" },
 };
 

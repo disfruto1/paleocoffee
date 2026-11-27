@@ -14,20 +14,26 @@ NEXT_PUBLIC_SITE_URL=https://ALAN_ADINIZ npm run build:tanitim
 
 Çıktı `web/out` klasörüdür. Satış sayfaları (ürünler, sepet, ödeme, üyelik, yönetim) bu derlemeye girmez.
 
-## Cloudflare Pages ile yayın (önerilen, ücretsiz)
+## Cloudflare ile yayın (ücretsiz)
 
-1. Cloudflare hesabı açın (ücretsiz).
-2. Workers & Pages → Create → Pages → **Connect to Git** → GitHub'dan `disfruto1/paleocoffee` deposunu seçin.
-3. Ayarlar:
+Depoda kökteki `wrangler.jsonc`, Cloudflare'e `web/out` klasörünü yayınlamasını söyler.
+
+1. Cloudflare panelinde **Workers & Pages → Create → Import a repository** → GitHub'dan `disfruto1/paleocoffee`.
+2. Ayarlar (Settings → Build):
+   - Project / Worker name: `paleocoffee` (`wrangler.jsonc` içindeki `name` ile aynı olmalı)
    - Production branch: `main`
-   - Framework preset: None
+   - Root directory: boş (depo kökü)
    - Build command: `cd web && npm ci && npm run build:tanitim`
-   - Build output directory: `web/out`
-   - Environment variables: `NEXT_PUBLIC_SITE_URL` = `https://ALAN_ADINIZ`, `NODE_VERSION` = `22`
-4. İlk yayından sonra **Custom domains** bölümünden alan adını ekleyin. Cloudflare, alan adı firmasının
-   panelinde girilecek DNS kaydını (veya nameserver değişikliğini) gösterir.
+   - Deploy command: `npx wrangler deploy`
+   - Build variables: `NODE_VERSION` = `22`, `NEXT_PUBLIC_SITE_URL` = `https://ALAN_ADINIZ`
+3. Deploy. Site önce `paleocoffee.<hesap>.workers.dev` adresinde açılır.
+4. Alan adı: Settings → **Domains & Routes → Add → Custom domain**. Alan adı Cloudflare'e eklenmiş olmalı
+   (Cloudflare, alan adı firmasının panelinde değiştirilecek nameserver'ları gösterir).
 
 Bundan sonra `main` dalına her gönderimde site kendiliğinden güncellenir.
+
+Hata "Could not detect a directory containing static files" ise ya Build command girilmemiştir ya da
+`wrangler.jsonc` içermeyen eski bir commit derlenmiştir.
 
 ## Fotoğraf ve video
 

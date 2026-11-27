@@ -1,0 +1,15 @@
+// Cloudflare Workers ile tanitim sitesinin yayini (ilk asama, sunucusuz).
+// Cloudflare'de: Build command: cd web && npm ci && npm run build:tanitim  |  Deploy command: npx wrangler deploy
+// Ayrintilar: deploy/TANITIM.md
+{
+  // Cloudflare'deki Worker adiyla ayni olmali
+  "name": "paleocoffee",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./web/out",
+    // /menu adresi menu.html dosyasini acar
+    "html_handling": "auto-trailing-slash",
+    // Olmayan sayfada sitenin kendi 404 sayfasi
+    "not_found_handling": "404-page"
+  }
+}

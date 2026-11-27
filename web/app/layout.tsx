@@ -16,7 +16,8 @@ export const metadata: Metadata = {
   description: SATIS_ACIK
     ? "Ayvalık'ta kahvaltı, bagel sandviçler ve üçüncü nesil kahve. Çekirdek ve öğütülmüş nitelikli kahve, demleme ekipmanları; Türkiye geneline kargo, Ayvalık içi teslimat."
     : "Ayvalık'ta kahvaltı, bagel ve kruvasan sandviçler, üçüncü nesil kahve. Zekibey, 13 Nisan Caddesi; salı hariç her gün 08:30–18:00.",
-  openGraph: { siteName: SITE.tamAd, locale: "tr_TR", type: "website" },
+  // Paylasim onizlemesi (WhatsApp, Instagram vb.) icin dukkanin fotografi
+  openGraph: { siteName: SITE.tamAd, locale: "tr_TR", type: "website", images: [{ url: "/gorseller/hero.jpg", width: 1125, height: 2000 }] },
 };
 
 export default function KokYerlesim({ children }: { children: React.ReactNode }) {

@@ -52,9 +52,9 @@ export default async function AnaSayfa() {
         </div>
         <div
           className="relative min-h-80 overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: "url(/gorseller/hero.jpg), linear-gradient(160deg, #5b3a26, #1c1a17 80%)" }}
+          style={{ backgroundImage: "url(/gorseller/hero.jpg), linear-gradient(160deg, #5b3a26, #1c1a17 80%)", backgroundPosition: "center 68%" }}
           role="img"
-          aria-label="Paleo Coffee & More"
+          aria-label="Paleo Coffee & More dükkânının önü: çınar ağacının altında, taş sokakta oturan müşteriler"
         >
           {SITE.heroVideo && (
             // Sessiz ve dongulu; hareket azaltma tercihinde fotograf kalir (globals.css)
@@ -111,15 +111,15 @@ export default async function AnaSayfa() {
       <section className="kap mt-20 grid md:grid-cols-2">
         <div
           className="min-h-80 bg-cover bg-center"
-          style={{ backgroundImage: "url(/gorseller/kafe.jpg), linear-gradient(135deg, #6b7a45, #2f3820)" }}
+          style={{ backgroundImage: "url(/gorseller/kafe.jpg), linear-gradient(135deg, #6b7a45, #2f3820)", backgroundPosition: "center 75%" }}
           role="img"
-          aria-label="Paleo Coffee dükkânı"
+          aria-label="Dükkânın önünde tutulan bütün bir San Sebastian cheesecake"
         />
         <div className="bg-murekkep p-10 text-zemin md:p-14">
           <p className="etiket text-zemin/60">Dükkânımız</p>
-          <h2 className="font-baslik mt-4 text-5xl leading-[1.1] md:text-6xl">Ayvalık&apos;ta bir mola</h2>
+          <h2 className="font-baslik mt-4 text-5xl leading-[1.1] md:text-6xl">Çınarın altında bir mola</h2>
           <p className="mt-6 text-zemin/75">
-            Güne kahvaltıyla başla, öğlen bir bagel sandviçle devam et. Espresso bazlı içecekler ve filtre kahveler gün boyu; sorularını baristamıza sor.
+            Güne kahvaltıyla başla, öğlen bir bagel sandviçle devam et. Espresso bazlı içecekler ve filtre kahveler gün boyu. Günlük ve sezonluk tatlılarımız tezgâhta; San Sebastian&apos;ı sormayı unutma.
           </p>
           <dl className="mt-8 border-t border-zemin/20 text-sm">
             <div className="flex justify-between gap-4 border-b border-zemin/20 py-3">
